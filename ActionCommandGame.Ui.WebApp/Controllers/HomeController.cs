@@ -12,10 +12,12 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             return View();
         }
-        public IActionResult BuyShopItem()
+        public IActionResult Shop()
         {
-            return RedirectToAction(nameof(Index));
+            return View();
         }
+        
+        
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
