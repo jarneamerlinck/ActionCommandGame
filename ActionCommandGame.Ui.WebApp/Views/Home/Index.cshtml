@@ -1,8 +1,91 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    ViewData["Cash"] = "134";
+    var shopList = new List<ShopItem>
+    {
+        new ShopItem{Id=0, Name = "PickAxe 1", Price = 16, Description ="Beter then starter pickaxe" },
+        new ShopItem{Id=1, Name = "Chicken panini", Price = 3, Description ="Fooooooood"},
+        new ShopItem{Id=2, Name = "Golden dress", Price = 150, Description ="Why even"},
+        new ShopItem{Id=3, Name = "Other Item", Price = 34}
+
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row text-center">
+    <div class="col-3">
+        Shop, you have: €@ViewData["Cash"]
+    </div>
+    <div class="col-6">Explore the vast Universe!</div>
+    <div class="col-3">Leader board</div>
+</div>
+<div class="container-fluid row">
+    <div class="col-3">
+
+        @foreach (var shopitem in shopList)
+        {
+            <partial name="shopPartial" model="@shopitem"/>
+        }
+
+    </div>
+    <div class="col-6  container "> @*The Game*@
+        <div class="text-center " style="background-color:rgba(0, 0, 0, 0.5);">
+            @if (@ViewBag.Message != null)
+            {
+                <p>@ViewBag.Message</p>
+            }
+
+            @if (@ViewBag.Name != null)
+            {
+                <p>You encounter: @ViewBag.Name</p>
+
+                @if (@ViewBag.Description != null)
+                {
+                    <p>@ViewBag.Description</p>
+                }
+
+                @if (@ViewBag.NegativeMessage != null)
+                {
+                    <p>@ViewBag.NegativeMessage</p>
+                }
+
+            }
+            @if (@ViewBag.MoneyMessage != null)
+            {
+                <p>@ViewBag.MoneyMessage</p>
+            }
+        </div>
+
+        <div class="footer">
+            @if (@ViewBag.Attack != null && @ViewBag.RemainingAttack != null)
+            {
+                <p class="mb-0">@ViewBag.Attack</p>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @ViewBag.AttackWidth">@ViewBag.RemainingAttack</div>
+                </div>
+            }
+            @if (@ViewBag.Defense != null && @ViewBag.RemainingDefense != null)
+            {
+                <p class="mb-0">@ViewBag.Defense</p>
+                <div class="progress">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: @ViewBag.DefenseWidth">@ViewBag.RemainingDefense</div>
+                </div>
+            }
+            @if (@ViewBag.Fuel != null && @ViewBag.RemainingFuel != null)
+            {
+                <p class="mb-0">@ViewBag.Fuel</p>
+                <div class="progress">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: @ViewBag.FuelWidth">@ViewBag.RemainingFuel</div>
+                </div>
+            }
+
+            <form method="post" class="pt-2">
+                <button type="submit" class="btn btn-block backgrdDarkest text-light" asp-action="Explore">Explore!</button>
+            </form>
+        </div>
+            
+        
+    </div>
+    
+
+
 </div>

@@ -7,8 +7,27 @@ html {
     font-size: 16px;
   }
 }
+.redTextWithHover {
+    text-decoration: none;
+    color: red;
+}
+.redTextWithHover:hover {
+    color: red;
+    font-weight: 900;
+}
+.yellowText {
+    color: #f6f740;
+}
+.buyBtn {
+    color: whitesmoke;
 
-.card-body {
+}
+.buyBtn:hover {
+    color: whitesmoke;
+    font-weight: 900;
+}
+
+.Accountfitter {
     flex: 0 0 auto;
 }
 html {
@@ -20,9 +39,9 @@ body {
   margin-bottom: 60px;
 }
 html, body {
-    background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
+    background-image: url('../images/MiningBackground.jpg');
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-size: auto;
     font-family: 'Numans', sans-serif;
 }
 .container {
