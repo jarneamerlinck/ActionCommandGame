@@ -35,21 +35,23 @@ html {
 .yellowText {
     color: #f6f740;
 }
-.buyBtn {
+.Userbtn {
     color: whitesmoke;
 
 }
-.buyBtn:hover {
-    color: whitesmoke;
-    font-weight: 900;
-}
+.Userbtn:hover {
+        color: whitesmoke;
+        font-weight: 900;
+    }
 .description {
     font-size: 14px;
 }
 .shopName {
     font-size: 24px;
 }
-
+.Playerbtn {
+    border-color: gray;
+}
 .Accountfitter {
     flex: 0 0 auto;
 }
@@ -198,7 +200,7 @@ p.text-muted {
 
 /*Start leaderboard*/
 .leaderboard-card {
-    background: #fff;
+    background: whitesmoke;
     margin-bottom: 30px;
     border-radius: 5px;
     overflow: hidden;
@@ -209,10 +211,10 @@ p.text-muted {
     transform: scale(1.05);
 }
 
-.leaderboard-card.leaderboard-card--first .leaderboard-card__top {
-    background: linear-gradient(45deg, #7e57c2, #ab47bc);
-    color: #fff;
-}
+    .leaderboard-card.leaderboard-card--first .leaderboard-card__top {
+        background: linear-gradient(45deg, #7e57c2, #ab47bc);
+        color: whitesmoke;
+    }
 
 .leaderboard-card__top {
     background: #f9f6ff;

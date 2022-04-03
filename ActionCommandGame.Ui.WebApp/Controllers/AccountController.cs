@@ -21,6 +21,11 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             _userManager = userManager;
         }
         */
+        public IActionResult Logout(string returnUrl)
+        {
+
+            return RedirectToAction("Login");
+        }
         public IActionResult Login(string returnUrl)
         {
             var signInModel = new SignInModel
