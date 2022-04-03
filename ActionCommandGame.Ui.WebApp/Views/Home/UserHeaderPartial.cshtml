@@ -1,0 +1,8 @@
+﻿@model User
+<div class="row text-center">
+    <div class="col-3">
+        <a type="button" class="btn redTextWithHover" asp-action="PickPlayer" asp-route-id=""> You have: @Model.Players.Count Players</a>
+    </div>
+    <div class="col-6"><a type="button" class="btn redTextWithHover" asp-action="Index" asp-route-id="">Let's Mine</a></div>
+    <div class="col-3"><a type="button" class="btn redTextWithHover" asp-action="LeaderBoard" asp-route-id="">Leader board</a></div><br/>
+</div>

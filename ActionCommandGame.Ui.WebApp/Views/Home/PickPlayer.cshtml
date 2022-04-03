@@ -1,0 +1,28 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Pick Player";
+    
+}
+
+<partial name="UserHeaderPartial" model="@Model"/>
+<div class="container-fluid row">
+    <h4 class="yellowText">All Players</h4>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="yellowText">Player</th>
+            <th class="yellowText">Cash</th>
+            <th class="yellowText">Use player</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i <= @Model.Players.Count - 1; i++)
+        {
+            <partial name="PickPlayerRowPartial" model="@Model.Players[i]"/>
+        }
+            
+        </tbody>
+    </table>	
+    
+</div>

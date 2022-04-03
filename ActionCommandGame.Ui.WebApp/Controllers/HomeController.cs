@@ -6,18 +6,83 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        
+        private readonly User _user;
+
+        public HomeController()
+        {
+            List<Player> temPlayers = new List<Player>
+            {
+                new Player
+                {
+                    Id = 0,
+                    Cash = 539,
+                    Name = "TestPlayer",
+                    ImageLocation = "../images/playerImage_01.png"
+                },
+                new Player
+                {
+                    Id = 1,
+                    Cash = 349,
+                    Name = "SkyLander",
+                    ImageLocation = "../images/playerImage_02.png"
+                },
+                new Player
+                {
+                    Id = 2,
+                    Cash = 3249,
+                    Name = "Eragon",
+                    ImageLocation = "../images/playerImage_03.png"
+                },
+                new Player
+                {
+                    Id = 3,
+                    Cash = 12,
+                    Name = "Vader",
+                    ImageLocation = "../images/playerImage_04.png"
+                },
+            };
+            _user = new User
+            {
+                Id = 0, 
+                Players = temPlayers
+            };
+        }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_user);
         }
+        [Route("/shop")]
         public IActionResult Shop()
         {
-            return View();
+            
+            return View(_user.Players[0]);
         }
-        
-        
+        public IActionResult Buy(ShopItem shopItem)
+        {
+
+            return RedirectToAction("index");
+        }
+
+        public IActionResult Mine()
+        {
+            return RedirectToAction("index");
+        }
+        public IActionResult Inventory()
+        {
+            return RedirectToAction("index");
+        }
+        public IActionResult LeaderBoard()
+        {
+            return View(_user);
+        }
+        public IActionResult PickPlayer()
+        {
+            return View(_user);
+        }
+
+
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

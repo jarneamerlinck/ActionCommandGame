@@ -1,19 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ActionCommandGame.Ui.WebApp.Views.Home;
 
 namespace ActionCommandGame.Ui.WebApp.Models
 {
-    public class ShopItem
+    public class ShopItem : IShopItem
     {
-        [Required]
-        public int Id { get; set; }
-        [Required]
-        public string Name { get; set; }
-        public string? Description { get; set; }
-        [Required]
-        public int Price { get; set; }
+        
         public int? Attack { get; set; }
         public int? Defense { get; set; }
         public int? Fuel { get; set; }
         
+
     }
 }

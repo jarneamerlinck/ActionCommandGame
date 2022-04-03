@@ -1,40 +1,25 @@
-﻿@model ShopItem
+﻿@model ActionCommandGame.Ui.WebApp.Views.Home.IShopItem
 
-<div class="card">
-    <div class="card-header" id="heading_1">
-        <h5 class="mb-0">
-            <button class="btn collapsed redTextWithHover">
-                @Model.Name
-            </button>
-        </h5>
-    </div>
+<div class="col-lg-4 col-md-6 my-lg-0 my-3"><a class="hyperlink"asp-action="Buy" asp-route-id="@Model.Id">
+    <div class="box" >
+        <div class="d-flex align-items-center">
+            <div class="rounded-circle mx-3 text-center d-flex align-items-center justify-content-center blue"> <img src="@Model.ImageLocation" alt="@Model.Name"> </div>
+            <div class="d-flex flex-column">
 
-    <div class="card-body">
-        <ul class="yellowText">
-            @if (@Model.Description != null)
-            {
-                <li>@Model.Description</li>
-            }
-            @if (@Model.Price > 0)
-            {
-                <li>Price: @Model.Price</li>
-            }
-            @if (@Model.Attack > 0)
-            {
-                <li>Attack: @Model.Attack</li>
-            }
-            @if (@Model.Defense > 0)
-            {
-                <li>Defense: @Model.Defense</li>
-            }
-            @if (@Model.Fuel > 0)
-            {
-                <li>Fuel: @Model.Fuel</li>
-            }
-        </ul>
-        <form method="post">
-            <button type="submit" class="btn buyBtn" asp-action="Shop" asp-route-id="@Model.Id">Buy</button>
-        </form>
-    </div>
-       
+                <p class="yellowText shopName">@Model.Name</p>
+                <p class="prices">@Model.Price€</p>
+                @if((@Model.StatsCategory != null )&& (@Model.StatsValue != null))
+                {
+                    <p>@Model.StatsCategory: @Model.StatsValue</p>
+                }
+                @if((@Model.Description != null ))
+                {
+                    <p class="description">@Model.Description</p>
+                }
+                
+            </div>
+        </div>
+    </div></a> 
 </div>
+
+   

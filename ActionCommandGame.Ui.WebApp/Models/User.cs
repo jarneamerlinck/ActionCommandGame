@@ -12,5 +12,7 @@ namespace ActionCommandGame.Ui.WebApp.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public List<Player> Players { set; get; }
+
     }
 }

@@ -1,0 +1,80 @@
+﻿@model User
+@{
+    var topPlayers = new List<Player>();
+    var otherPlayers = new List<Player>();
+    bool showTopPlayers = false;
+    bool showOtherPlayers = false;
+    if (@Model.Players.Count == 0)
+    {
+        topPlayers = null;
+        otherPlayers = null;
+    }
+    else if (@Model.Players.Count < 4)
+    {
+        showTopPlayers = true;
+        topPlayers = @Model.Players.GetRange(0, 3);
+        topPlayers.Sort((player, player1) => player1.Cash.CompareTo(player.Cash));
+        
+    }
+    else
+    {
+        showTopPlayers = true;
+        showOtherPlayers = true;
+        topPlayers = @Model.Players.GetRange(0, 3);
+        topPlayers.Sort((player, player1) => player1.Cash.CompareTo(player.Cash));
+
+        var temp = topPlayers[0];
+        topPlayers.RemoveAt(0);
+        topPlayers.Insert(1, temp);
+
+        otherPlayers = @Model.Players.GetRange(3, @Model.Players.Count-3);
+        otherPlayers.Sort((player, player1) => player1.Cash.CompareTo(player.Cash));
+    }
+    
+
+}
+<partial name="UserHeaderPartial" model="@Model"/>
+<div class="container">	
+@if (@Model.Players.Count == 0)
+{
+	<p>No players for @Model.UserName</p>
+}
+else
+{
+	if (showTopPlayers)
+	{
+	    <h1 class="yellowText">Top Gainers</h1>
+	    <br>
+	    <br>
+
+	    <div class="row">
+            @for (int i = 0; i < 3; i++)
+            {
+                <partial name="LeaderBoardTopPartial" model="@topPlayers[i]"/>
+            }
+        </div>
+	}
+	if (showOtherPlayers)
+	{
+	<h4 class="yellowText">All Players</h4>
+
+	<table class="table">
+        <thead>
+            <tr>
+                <th class="yellowText">Player</th>
+                <th class="yellowText">Cash</th>
+            </tr>
+            </thead>
+            <tbody>
+	    @for (int i = 0; i <= @otherPlayers.Count-1; i++)
+	    {
+	        <partial name="LeaderBoardRowPartial" model="@otherPlayers[i]"/>
+	    }
+            
+        </tbody>
+    </table>	
+        
+	}
+}
+
+</div>

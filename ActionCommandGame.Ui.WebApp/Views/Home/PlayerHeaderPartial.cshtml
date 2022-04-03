@@ -1,0 +1,8 @@
+﻿@model Player
+<div class="row text-center">
+    <div class="col-3">
+        <a type="button" class="btn redTextWithHover" asp-action="Shop" asp-route-id=""> Shop, you have: €@Model.Cash</a>
+    </div>
+    <div class="col-6"><a type="button" class="btn redTextWithHover" asp-action="Index" asp-route-id="">Let's Mine</a></div>
+    <div class="col-3"><a type="button" class="btn redTextWithHover" asp-action="LeaderBoard" asp-route-id="">Leader board</a></div><br/>
+</div>

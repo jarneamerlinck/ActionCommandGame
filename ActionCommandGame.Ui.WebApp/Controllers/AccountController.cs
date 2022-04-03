@@ -25,7 +25,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             var signInModel = new SignInModel
             {
-                ReturnUrl = "/"
+                ReturnUrl = "/Shop"
             };
             return View(signInModel);
         }
@@ -33,7 +33,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             var registerModel = new RegisterModel
             {
-                ReturnUrl = "/"
+                ReturnUrl = "/Shop"
             };
             return View(registerModel);
         }
@@ -41,7 +41,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             var registerModel = new RegisterModel
             {
-                ReturnUrl = "/"
+                ReturnUrl = "/Shop"
             };
             return View(registerModel);
         }
