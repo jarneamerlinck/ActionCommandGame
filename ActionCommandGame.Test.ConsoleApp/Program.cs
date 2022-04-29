@@ -55,7 +55,7 @@ Console.ReadLine();
 
 //Register
 var email = "j@knightofzero.com";
-var password = "Kali@123";
+var password = "New@Password2";
 
 var registerRequest = new UserRegistrationRequest { Email = email, Password = password};
 var registerResult = await identityApi.RegisterAsync(registerRequest);
@@ -124,3 +124,25 @@ else
 }
 
 Console.ReadLine();
+
+Console.Clear();
+Console.WriteLine("Login out");
+
+await tokenStore.SaveTokenAsync("");
+
+try
+{
+    playerResult = await playerApi.Find(new PlayerFilter
+    {
+        FilterUserPlayers = false
+    });
+}
+
+
+catch (Exception e)
+{
+    Console.WriteLine(e);
+
+}
+;
+
