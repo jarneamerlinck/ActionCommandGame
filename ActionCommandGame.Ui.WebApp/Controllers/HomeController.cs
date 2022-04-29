@@ -1,6 +1,8 @@
 ﻿using ActionCommandGame.Ui.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace ActionCommandGame.Ui.WebApp.Controllers
 {
@@ -47,17 +49,19 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
                 Players = temPlayers
             };
         }
-
+        
         public IActionResult Index()
         {
             return View(_user);
         }
+        [Authorize]
         [Route("/shop")]
         public IActionResult Shop()
         {
             
             return View(_user.Players[0]);
         }
+
         public IActionResult Buy(ShopItem shopItem)
         {
 
@@ -68,14 +72,17 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             return RedirectToAction("index");
         }
+
         public IActionResult Inventory()
         {
             return RedirectToAction("index");
         }
+
         public IActionResult LeaderBoard()
         {
             return View(_user);
         }
+
         public IActionResult PickPlayer()
         {
             return View(_user);

@@ -1,3 +1,4 @@
+using System.Net;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Sdk.Extensions;
 using ActionCommandGame.Ui.WebApp;
@@ -12,17 +13,14 @@ builder.Services.AddControllersWithViews();
 var appSettings = new AppSettings();
 builder.Configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
 builder.Services.AddApi(appSettings.ApiBaseUrl);
-builder.Services.AddScoped<ITokenStore, TokenStore>();
+builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient<ITokenStore, TokenStore>();
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -30,6 +28,15 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+/*
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode == (int)HttpStatusCode.Unauthorized ||
+        response.StatusCode == (int)HttpStatusCode.Forbidden)
+        response.Redirect("/Authentication");
+});*/
 app.UseAuthorization();
 
 app.MapControllerRoute(

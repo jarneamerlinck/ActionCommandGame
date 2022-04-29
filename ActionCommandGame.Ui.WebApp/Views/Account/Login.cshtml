@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "LoginPage";
     ViewData["submit_Button"] = "Login";
+    
 }
 <div asp-validation-summary="ModelOnly"></div>
 <div class="container">
@@ -11,7 +12,7 @@
                 <h3>Sign In</h3>
             </div>
             <div class="card-body Accountfitter">
-                <form method="post">
+                <form method="post" asp-controller="Account" asp-action="Login">
                     <div class="input-group login-margin">
                         <div class="input-group-prepend">
                             <label asp-for="Username">
@@ -35,7 +36,7 @@
                         <input type="checkbox">Remember Me
                     </div>
                     <div class="login-margin">
-                        <input type="submit" value="@ViewData["submit_Button"]" class="btn float-end login_btn">
+                        <input type="submit" asp-controller="Account" asp-action="login" asp-route-returnUrl="@Model.ReturnUrl" value="@ViewData["submit_Button"]" class="btn float-end login_btn">
                     </div>
                 </form>
             </div>

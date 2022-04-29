@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using ActionCommandGame.Api.Authentication.Model;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Ui.WebApp.Models;
+using ActionCommandGame.Sdk;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,46 +15,30 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
     public class AccountController : Controller
     {
 
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IIdentityApi _identityApi;
+        private readonly IPlayerApi _playerApi;
         private readonly ITokenStore _tokenStore;
 
-        public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public AccountController(IIdentityApi identityApi, IPlayerApi playerApi, ITokenStore tokenStore)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _identityApi = identityApi;
+            _playerApi = playerApi;
+            _tokenStore = tokenStore;
         }
 
         public IActionResult Logout(string returnUrl)
         {
-            
-            return RedirectToAction("Login");
+
+            return Login(returnUrl);
         }
-        public IActionResult Login(string returnUrl)
+        public IActionResult AccessDenied(string returnUrl)
         {
-            var signInModel = new SignInModel
-            {
-                ReturnUrl = "/Shop"
-            };
-            return View(signInModel);
+
+            return View();
         }
-        public IActionResult Register(string returnUrl)
-        {
-            var registerModel = new RegisterModel
-            {
-                ReturnUrl = "/Shop"
-            };
-            return View(registerModel);
-        }
-        public IActionResult ForgotPassword(string returnUrl)
-        {
-            var registerModel = new RegisterModel
-            {
-                ReturnUrl = "/Shop"
-            };
-            return View(registerModel);
-        }
-        /*
+
+        [Route("/login")]
+        [Route("/account/login")]
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
@@ -66,31 +52,28 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(SignInModel signInModel)
         {
+            /*
             if (!ModelState.IsValid)
             {
-                return View();
-            }
+                return View(signInModel.ReturnUrl);
+            }*/
 
-            var signInResult = await _signInManager.PasswordSignInAsync(signInModel.Username, signInModel.Password, signInModel.RememberMe, false);
-            if (signInResult.Succeeded)
+            var loginResult = await _identityApi.SignInAsync(new UserSignInRequest 
+                { Email = signInModel.Username, Password = signInModel.Password });
+
+            if (loginResult.Success && loginResult.Token is not null)
             {
+
+                await _tokenStore.SaveTokenAsync(loginResult.Token);
+            }
+            else if (loginResult.Errors is not null)
+            {
+                
                 return RedirectToLocal(signInModel.ReturnUrl);
             }
 
-            ModelState.AddModelError("", "Username/Password combination is not correct.");
-
-            return View();
+            return RedirectToLocal("/");
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Logout(string returnUrl)
-        {
-            await _signInManager.SignOutAsync();
-
-            return RedirectToLocal(returnUrl);
-        }
-
-        [HttpGet]
         public IActionResult Register(string returnUrl)
         {
             var registerModel = new RegisterModel
@@ -99,33 +82,20 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             };
             return View(registerModel);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterModel registerModel)
+        public IActionResult ForgotPassword(string returnUrl)
         {
-            if (!ModelState.IsValid)
+            var registerModel = new RegisterModel
             {
-                return View(registerModel);
-            }
-
-            var identityUser = new IdentityUser(registerModel.Username);
-
-            var userCreateResult = await _userManager.CreateAsync(identityUser, registerModel.Password);
-
-            if (userCreateResult.Succeeded)
-            {
-                await _signInManager.PasswordSignInAsync(registerModel.Username, registerModel.Password, false, false);
-                return RedirectToLocal(registerModel.ReturnUrl);
-            }
-
+                ReturnUrl = "/Shop"
+            };
             return View(registerModel);
         }
-        */
+        
         private IActionResult RedirectToLocal(string returnUrl)
         {
             if (string.IsNullOrWhiteSpace(returnUrl))
             {
-                return RedirectToAction("Index", "Home");
+                return Login(returnUrl);
             }
 
             return LocalRedirect(returnUrl);
