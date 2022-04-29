@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Ui.WebApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -11,19 +12,20 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        /*
+
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ITokenStore _tokenStore;
 
         public AccountController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
         }
-        */
+
         public IActionResult Logout(string returnUrl)
         {
-
+            
             return RedirectToAction("Login");
         }
         public IActionResult Login(string returnUrl)
