@@ -28,7 +28,8 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         public IActionResult Logout(string returnUrl)
         {
-
+            //Empty token
+            _tokenStore.SaveTokenAsync("");
             return Login(returnUrl);
         }
         public IActionResult AccessDenied(string returnUrl)
@@ -61,17 +62,13 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             var loginResult = await _identityApi.SignInAsync(new UserSignInRequest 
                 { Email = signInModel.Username, Password = signInModel.Password });
 
-            if (loginResult.Success && loginResult.Token is not null)
+            if (!loginResult.Success || loginResult.Token is null || loginResult.Errors is not null)
             {
-
-                await _tokenStore.SaveTokenAsync(loginResult.Token);
-            }
-            else if (loginResult.Errors is not null)
-            {
-                
                 return RedirectToLocal(signInModel.ReturnUrl);
+
             }
 
+            await _tokenStore.SaveTokenAsync(loginResult.Token);
             return RedirectToLocal("/");
         }
         public IActionResult Register(string returnUrl)

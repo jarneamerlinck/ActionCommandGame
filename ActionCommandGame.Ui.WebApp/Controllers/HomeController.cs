@@ -1,6 +1,7 @@
 ﻿using ActionCommandGame.Ui.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using ActionCommandGame.Sdk.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -8,10 +9,14 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IIdentityApi _identityApi;
+        private readonly ITokenStore _tokenStore;
         private readonly User _user;
 
-        public HomeController()
+        public HomeController(IIdentityApi identityApi, ITokenStore tokenStore)
         {
+            _identityApi = identityApi;
+            _tokenStore = tokenStore;
             List<Player> temPlayers = new List<Player>
             {
                 new Player
@@ -43,6 +48,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
                     ImageLocation = "../images/playerImage_04.png"
                 },
             };
+
             _user = new User
             {
                 Id = 0, 
@@ -58,7 +64,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [Route("/shop")]
         public IActionResult Shop()
         {
-            
+            _tokenStore.GetTokenAsync();
             return View(_user.Players[0]);
         }
 

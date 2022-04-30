@@ -1,20 +1,29 @@
+
 using System.Net;
+using ActionCommandGame.Sdk;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Sdk.Extensions;
 using ActionCommandGame.Ui.WebApp;
 using ActionCommandGame.Ui.WebApp.Settings;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
 
 var appSettings = new AppSettings();
 builder.Configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
 builder.Services.AddApi(appSettings.ApiBaseUrl);
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ITokenStore, TokenStore>();
+//builder.Services.AddAuthentication(appSettings.JwtToken);
+
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+
 
 
 var app = builder.Build();
