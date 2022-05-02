@@ -16,21 +16,22 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
     {
 
         private readonly IIdentityApi _identityApi;
-        private readonly IPlayerApi _playerApi;
+        //private readonly IPlayerApi _playerApi;
         private readonly ITokenStore _tokenStore;
 
-        public AccountController(IIdentityApi identityApi, IPlayerApi playerApi, ITokenStore tokenStore)
+        public AccountController(IIdentityApi identityApi, /*IPlayerApi playerApi,*/ ITokenStore tokenStore)
         {
+
             _identityApi = identityApi;
-            _playerApi = playerApi;
+           // _playerApi = playerApi;
             _tokenStore = tokenStore;
         }
 
-        public IActionResult Logout(string returnUrl)
+        public async Task<IActionResult> Logout(string returnUrl)
         {
-            //Empty token
-            _tokenStore.SaveTokenAsync("");
-            return Login(returnUrl);
+            await _tokenStore.ClearTokenAsync();
+
+            return RedirectToLocal("/");
         }
         public IActionResult AccessDenied(string returnUrl)
         {
@@ -43,6 +44,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
+            Console.WriteLine("wip login");
             var signInModel = new SignInModel
             {
                 ReturnUrl = returnUrl
@@ -69,7 +71,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             }
 
             await _tokenStore.SaveTokenAsync(loginResult.Token);
-            return RedirectToLocal("/");
+            return RedirectToLocal(signInModel.ReturnUrl);
         }
         public IActionResult Register(string returnUrl)
         {

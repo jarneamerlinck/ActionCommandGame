@@ -17,6 +17,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             _identityApi = identityApi;
             _tokenStore = tokenStore;
+
             List<Player> temPlayers = new List<Player>
             {
                 new Player
@@ -64,7 +65,8 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [Route("/shop")]
         public IActionResult Shop()
         {
-            _tokenStore.GetTokenAsync();
+            //_tokenStore.GetTokenAsync();
+            Console.WriteLine("wip here");
             return View(_user.Players[0]);
         }
 
@@ -73,7 +75,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
             return RedirectToAction("index");
         }
-
+        [Authorize]
         public IActionResult Mine()
         {
             return RedirectToAction("index");

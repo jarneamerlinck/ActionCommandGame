@@ -11,6 +11,11 @@ namespace ActionCommandGame.Ui.WebApp
         {
             _httpContextAccessor = httpContextAccessor;
         }
+        public Task ClearTokenAsync()
+        {
+            _httpContextAccessor.HttpContext.Response.Cookies.Delete("token");
+            return Task.CompletedTask;
+        }
         public Task<string> GetTokenAsync()
         {
             if (_httpContextAccessor.HttpContext is null || !_httpContextAccessor.HttpContext.Request.Cookies.ContainsKey("token"))

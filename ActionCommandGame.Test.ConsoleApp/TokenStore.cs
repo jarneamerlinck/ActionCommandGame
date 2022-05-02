@@ -6,6 +6,11 @@ namespace ActionCommandGame.Test.ConsoleApp
     public class TokenStore: ITokenStore
     {
         private string Token { get; set; }
+        public Task ClearTokenAsync()
+        {
+            Token = "";
+            return Task.CompletedTask;
+        }
 
         public Task<string> GetTokenAsync()
         {

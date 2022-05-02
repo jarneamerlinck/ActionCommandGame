@@ -4,5 +4,6 @@
     {
         Task<string> GetTokenAsync();
         Task SaveTokenAsync(string token);
+        Task ClearTokenAsync();
     }
 }
