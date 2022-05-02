@@ -53,7 +53,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(SignInModel signInModel)
+        public async Task<IActionResult> Login(  SignInModel signInModel)
         {
             /*
             if (!ModelState.IsValid)

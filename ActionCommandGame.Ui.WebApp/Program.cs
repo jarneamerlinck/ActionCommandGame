@@ -19,14 +19,14 @@ builder.Configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
 builder.Services.AddApi(appSettings.ApiBaseUrl);
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ITokenStore, TokenStore>();
-builder.Services.AddAuthentication(appSettings.JwtToken);
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config => {
         config.AccessDeniedPath = appSettings.SignInUrl;
         config.LoginPath = appSettings.SignInUrl;
         config.SlidingExpiration = true;
         config.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-
+        
 
     });
 
@@ -43,7 +43,9 @@ var cookiePolicyOptions = new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,
     HttpOnly = HttpOnlyPolicy.Always,
+
 };
+
 app.UseCookiePolicy(cookiePolicyOptions);
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -51,6 +53,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
 /*
 app.UseStatusCodePages(async context =>
 {

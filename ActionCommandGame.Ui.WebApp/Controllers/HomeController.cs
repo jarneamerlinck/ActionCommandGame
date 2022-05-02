@@ -66,7 +66,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         public IActionResult Shop()
         {
             //_tokenStore.GetTokenAsync();
-            Console.WriteLine("wip here");
+            //Console.WriteLine("wip here");
             return View(_user.Players[0]);
         }
 
