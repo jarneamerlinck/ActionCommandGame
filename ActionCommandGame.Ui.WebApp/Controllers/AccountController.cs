@@ -29,7 +29,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         public async Task<IActionResult> Logout(string returnUrl)
         {
-            await _tokenStore.ClearTokenAsync();
+            await _tokenStore.SaveTokenAsync("");
 
             return RedirectToLocal("/");
         }
@@ -44,35 +44,47 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
-            Console.WriteLine("wip login");
+            /*Console.WriteLine("wip login");
             var signInModel = new SignInModel
             {
                 ReturnUrl = returnUrl
-            };
-            return View(signInModel);
+            };*/
+            if (returnUrl is null)
+            {
+                returnUrl = "/";
+            }
+            return View(new UserSignInRequest()
+            {
+                ReturnUrl = returnUrl
+            });
         }
-
+        [Route("/login")]
+        [Route("/account/login")]
         [HttpPost]
-        public async Task<IActionResult> Login(  SignInModel signInModel)
+        public async Task<IActionResult> Login(UserSignInRequest request)
         {
-            /*
-            if (!ModelState.IsValid)
+            var signInResult = await _identityApi.SignInAsync(request);
+            if (!signInResult.Success)
             {
-                return View(signInModel.ReturnUrl);
-            }*/
+                if (signInResult.Errors is not null)
+                {
+                    foreach (var error in signInResult.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
 
-            var loginResult = await _identityApi.SignInAsync(new UserSignInRequest 
-                { Email = signInModel.Username, Password = signInModel.Password });
-
-            if (!loginResult.Success || loginResult.Token is null || loginResult.Errors is not null)
-            {
-                return RedirectToLocal(signInModel.ReturnUrl);
-
+                return Login("/Login");
             }
 
-            await _tokenStore.SaveTokenAsync(loginResult.Token);
-            return RedirectToLocal(signInModel.ReturnUrl);
+            var token = signInResult.Token;
+
+            //Save token for later use in the API
+            await _tokenStore.SaveTokenAsync(token);
+
+            return RedirectToLocal(request.ReturnUrl);
         }
+
         public IActionResult Register(string returnUrl)
         {
             var registerModel = new RegisterModel

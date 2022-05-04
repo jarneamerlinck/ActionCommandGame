@@ -17,7 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 var appSettings = new AppSettings();
 builder.Configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
 builder.Services.AddApi(appSettings.ApiBaseUrl);
-builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddTransient<ITokenStore, TokenStore>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -30,6 +31,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("player", policy =>
+    {
+        policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
+        policy.RequireAuthenticatedUser();
+    });
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -41,8 +50,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 var cookiePolicyOptions = new CookiePolicyOptions
 {
-    MinimumSameSitePolicy = SameSiteMode.Strict,
+    MinimumSameSitePolicy = SameSiteMode.Unspecified,
     HttpOnly = HttpOnlyPolicy.Always,
+    
 
 };
 
@@ -53,16 +63,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
-
-/*
-app.UseStatusCodePages(async context =>
-{
-    var response = context.HttpContext.Response;
-
-    if (response.StatusCode == (int)HttpStatusCode.Unauthorized ||
-        response.StatusCode == (int)HttpStatusCode.Forbidden)
-        response.Redirect("/Authentication");
-});*/
 app.UseAuthorization();
 
 app.MapControllerRoute(

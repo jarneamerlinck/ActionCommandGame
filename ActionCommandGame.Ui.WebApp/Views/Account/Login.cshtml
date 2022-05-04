@@ -1,4 +1,4 @@
-﻿@model SignInModel
+﻿@model ActionCommandGame.Api.Authentication.Model.UserSignInRequest
 @{
     ViewData["Title"] = "LoginPage";
     ViewData["submit_Button"] = "Login";
@@ -15,12 +15,12 @@
                 <form method="post" asp-controller="Account" asp-action="Login">
                     <div class="input-group login-margin">
                         <div class="input-group-prepend">
-                            <label asp-for="Username">
+                            <label asp-for="Email">
                             <span class="input-group-text"><i class="fas fa-user"></i></span></label>
                         </div>
                         <label></label>
-                        <input asp-for="Username" placeholder="user name" class="form-control">
-                        <span asp-validation-for="Username"></span>
+                        <input asp-for="Email" placeholder="user name" class="form-control">
+                        <span asp-validation-for="Email"></span>
 						
                     </div>
                     <div class="input-group login-margin">

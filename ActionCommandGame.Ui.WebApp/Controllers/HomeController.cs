@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ActionCommandGame.Sdk.Abstractions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -12,6 +13,8 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         private readonly IIdentityApi _identityApi;
         private readonly ITokenStore _tokenStore;
         private readonly User _user;
+
+        private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme;
 
         public HomeController(IIdentityApi identityApi, ITokenStore tokenStore)
         {
@@ -61,7 +64,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             return View(_user);
         }
-        [Authorize]
+        [Authorize(Policy = "player")]
         [Route("/shop")]
         public IActionResult Shop()
         {
@@ -75,10 +78,16 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
             return RedirectToAction("index");
         }
-        [Authorize]
-        public IActionResult Mine()
+
+        public async Task<IActionResult> Mine()
         {
-            return RedirectToAction("index");
+            var token = await _tokenStore.GetTokenAsync();
+            if (token == null)
+            {
+                return RedirectToAction("index");
+            }
+            return RedirectToAction("LeaderBoard");
+
         }
 
         public IActionResult Inventory()
