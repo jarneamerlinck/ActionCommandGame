@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using ActionCommandGame.Sdk.Abstractions;
+using ActionCommandGame.Services.Model.Filters;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 
@@ -13,12 +14,13 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         private readonly IIdentityApi _identityApi;
         private readonly ITokenStore _tokenStore;
         private readonly User _user;
-
+        private readonly IPlayerApi _playerApi;
         private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme;
 
-        public HomeController(IIdentityApi identityApi, ITokenStore tokenStore)
+        public HomeController(IIdentityApi identityApi, ITokenStore tokenStore, IPlayerApi playerApi)
         {
             _identityApi = identityApi;
+            _playerApi = playerApi;
             _tokenStore = tokenStore;
 
             List<Player> temPlayers = new List<Player>
@@ -64,7 +66,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             return View(_user);
         }
-        [Authorize(Policy = "player")]
+        [Authorize]
         [Route("/shop")]
         public IActionResult Shop()
         {
@@ -72,13 +74,13 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             //Console.WriteLine("wip here");
             return View(_user.Players[0]);
         }
-
+        [Authorize]
         public IActionResult Buy(ShopItem shopItem)
         {
 
             return RedirectToAction("index");
         }
-
+        [Authorize]
         public async Task<IActionResult> Mine()
         {
             var token = await _tokenStore.GetTokenAsync();
@@ -95,9 +97,17 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             return RedirectToAction("index");
         }
 
-        public IActionResult LeaderBoard()
+        public async Task<IActionResult> LeaderBoard()
         {
-            return View(_user);
+            var playerResult = await _playerApi.Find(new PlayerFilter
+            {
+                FilterUserPlayers = false
+            });
+            if (!playerResult.IsSuccess)
+            {
+                return View("Index");
+            }
+            return View(playerResult.Data);
         }
 
         public IActionResult PickPlayer()

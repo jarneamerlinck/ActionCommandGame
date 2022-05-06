@@ -16,8 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var appSettings = new AppSettings();
 builder.Configuration.GetSection(nameof(AppSettings)).Bind(appSettings);
-builder.Services.AddApi(appSettings.ApiBaseUrl);
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddApi(appSettings.ApiBaseUrl);
+
 
 builder.Services.AddTransient<ITokenStore, TokenStore>();
 

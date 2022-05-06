@@ -1,43 +1,56 @@
-﻿@model User
+﻿@model IList<ActionCommandGame.Services.Model.Results.PlayerResult>
 @{
-    var topPlayers = new List<Player>();
-    var otherPlayers = new List<Player>();
+    var topPlayers = new List<ActionCommandGame.Services.Model.Results.PlayerResult>();
+    var otherPlayers = new List<ActionCommandGame.Services.Model.Results.PlayerResult>();
     bool showTopPlayers = false;
     bool showOtherPlayers = false;
-    if (@Model.Players.Count == 0)
+
+
+    if (@Model.Count == 0)
     {
         topPlayers = null;
         otherPlayers = null;
     }
-    else if (@Model.Players.Count < 4)
+    else if (@Model.Count < 4)
     {
         showTopPlayers = true;
-        topPlayers = @Model.Players.GetRange(0, 3);
-        topPlayers.Sort((player, player1) => player1.Cash.CompareTo(player.Cash));
+        foreach (var playerResult in @Model)
+        {
+            topPlayers.Add(playerResult);
+        }
+        topPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
         
     }
     else
     {
         showTopPlayers = true;
         showOtherPlayers = true;
-        topPlayers = @Model.Players.GetRange(0, 3);
-        topPlayers.Sort((player, player1) => player1.Cash.CompareTo(player.Cash));
+        for (var i=0; i < 3; i++)
+        {
+            topPlayers.Add(@Model[i]);
+        }
+
+        topPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
 
         var temp = topPlayers[0];
         topPlayers.RemoveAt(0);
         topPlayers.Insert(1, temp);
 
-        otherPlayers = @Model.Players.GetRange(3, @Model.Players.Count-3);
-        otherPlayers.Sort((player, player1) => player1.Cash.CompareTo(player.Cash));
+        for (var i=3; i < @Model.Count; i++)
+        {
+            otherPlayers.Add(@Model[i]);
+        }
+
+        otherPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
     }
     
 
 }
-<partial name="UserHeaderPartial" model="@Model"/>
+
 <div class="container">	
-@if (@Model.Players.Count == 0)
+@if (@Model.Count == 0)
 {
-	<p>No players for @Model.UserName</p>
+	<p>No players for user</p>
 }
 else
 {

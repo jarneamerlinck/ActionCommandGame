@@ -18,13 +18,15 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         private readonly IIdentityApi _identityApi;
         //private readonly IPlayerApi _playerApi;
         private readonly ITokenStore _tokenStore;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(IIdentityApi identityApi, /*IPlayerApi playerApi,*/ ITokenStore tokenStore)
+        public AccountController(IIdentityApi identityApi, /*IPlayerApi playerApi,*/ ITokenStore tokenStore, IHttpContextAccessor contextAccessor)
         {
 
             _identityApi = identityApi;
            // _playerApi = playerApi;
             _tokenStore = tokenStore;
+            _httpContextAccessor = contextAccessor;
         }
 
         public async Task<IActionResult> Logout(string returnUrl)
@@ -63,8 +65,12 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserSignInRequest request)
         {
+            if (request.Email is null || request.Password is null)
+            {
+                return Login("/Login");
+            }
             var signInResult = await _identityApi.SignInAsync(request);
-            if (!signInResult.Success)
+            if (!signInResult.Success|| signInResult.Token is null)
             {
                 if (signInResult.Errors is not null)
                 {
@@ -76,10 +82,9 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
                 return Login("/Login");
             }
-
+            
             var token = signInResult.Token;
 
-            //Save token for later use in the API
             await _tokenStore.SaveTokenAsync(token);
 
             return RedirectToLocal(request.ReturnUrl);
