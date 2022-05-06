@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ActionCommandGame.Api.Authentication.Model;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Ui.WebApp.Models;
 using ActionCommandGame.Sdk;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,8 +33,8 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         public async Task<IActionResult> Logout(string returnUrl)
         {
-            await _tokenStore.SaveTokenAsync("");
-
+            await _tokenStore.SaveTokenAsync(string.Empty);
+            await HttpContext.SignOutAsync();
             return RedirectToLocal("/");
         }
         public IActionResult AccessDenied(string returnUrl)
@@ -46,11 +48,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [HttpGet]
         public IActionResult Login(string returnUrl)
         {
-            /*Console.WriteLine("wip login");
-            var signInModel = new SignInModel
-            {
-                ReturnUrl = returnUrl
-            };*/
+
             if (returnUrl is null)
             {
                 returnUrl = "/";
@@ -63,11 +61,17 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [Route("/login")]
         [Route("/account/login")]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserSignInRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Username/password is not valid");
+                return View(request.ReturnUrl);
+            }
             if (request.Email is null || request.Password is null)
             {
-                return Login("/Login");
+                return Login(request.ReturnUrl);
             }
             var signInResult = await _identityApi.SignInAsync(request);
             if (!signInResult.Success|| signInResult.Token is null)
@@ -85,7 +89,14 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             
             var token = signInResult.Token;
 
+
             await _tokenStore.SaveTokenAsync(token);
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(ClaimTypes.Email, request.Email));
+
+
+            await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+            
 
             return RedirectToLocal(request.ReturnUrl);
         }

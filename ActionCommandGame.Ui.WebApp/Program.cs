@@ -4,6 +4,7 @@ using ActionCommandGame.Sdk;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Sdk.Extensions;
 using ActionCommandGame.Ui.WebApp;
+using ActionCommandGame.Ui.WebApp.Models;
 using ActionCommandGame.Ui.WebApp.Settings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,12 +27,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config => {
         config.AccessDeniedPath = appSettings.SignInUrl;
         config.LoginPath = appSettings.SignInUrl;
-        config.SlidingExpiration = true;
+        //config.SlidingExpiration = true;
         config.ExpireTimeSpan = TimeSpan.FromMinutes(60);
         
 
     });
-
+/*
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("player", policy =>
@@ -39,7 +40,7 @@ builder.Services.AddAuthorization(options =>
         policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
         policy.RequireAuthenticatedUser();
     });
-});
+});*/
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

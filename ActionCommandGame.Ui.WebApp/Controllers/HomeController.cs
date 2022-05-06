@@ -15,12 +15,17 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         private readonly ITokenStore _tokenStore;
         private readonly User _user;
         private readonly IPlayerApi _playerApi;
+        private readonly IItemApi _itemApi;
         private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme;
 
-        public HomeController(IIdentityApi identityApi, ITokenStore tokenStore, IPlayerApi playerApi)
+        public HomeController(IIdentityApi identityApi, 
+                                ITokenStore tokenStore, 
+                                IPlayerApi playerApi,
+                                IItemApi itemApi)
         {
             _identityApi = identityApi;
             _playerApi = playerApi;
+            _itemApi = itemApi;
             _tokenStore = tokenStore;
 
             List<Player> temPlayers = new List<Player>
@@ -68,11 +73,14 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         }
         [Authorize]
         [Route("/shop")]
-        public IActionResult Shop()
+        public async Task<IActionResult> Shop()
         {
-            //_tokenStore.GetTokenAsync();
-            //Console.WriteLine("wip here");
-            return View(_user.Players[0]);
+            var itemsRequest = await _itemApi.FindAsync();
+            if (!itemsRequest.IsSuccess)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(itemsRequest.Data);
         }
         [Authorize]
         public IActionResult Buy(ShopItem shopItem)

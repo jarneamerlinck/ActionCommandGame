@@ -1,39 +1,43 @@
 ﻿using System.Threading.Tasks;
 using ActionCommandGame.Sdk.Abstractions;
 
-namespace ActionCommandGame.Ui.WebApp
+namespace ActionCommandGame.Ui.WebApp.Models
 {
     public class TokenStore: ITokenStore
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string _cookieName;
+        private readonly string _tokenName = "jwt_token";
 
         public TokenStore(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _cookieName = "jwt_token";
+            
         }
 
         public Task<string> GetTokenAsync()
         {
-            if (_httpContextAccessor.HttpContext is null || !_httpContextAccessor.HttpContext.Request.Cookies.ContainsKey(_cookieName))
+            if (_httpContextAccessor.HttpContext is null)
             {
-                return Task.FromResult("");
+                return Task.FromResult(string.Empty);
             }
 
-            var token = _httpContextAccessor.HttpContext.Request.Cookies[_cookieName];
-            if (token is null)
-            {
-                return Task.FromResult("");
-            }
-            return Task.FromResult(token);
-
+            _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(_tokenName, out string? token);
+            return Task.FromResult(token ?? "");
         }
 
         public Task SaveTokenAsync(string token)
         {
+            if (_httpContextAccessor.HttpContext is null)
+            {
+                return Task.FromResult(string.Empty);
+            }
+
+            if (_httpContextAccessor.HttpContext.Request.Cookies.ContainsKey(_tokenName))
+            {
+                _httpContextAccessor.HttpContext.Response.Cookies.Delete(_tokenName);
+            }
             _httpContextAccessor.HttpContext.Response.Cookies.Append(
-                _cookieName,
+                _tokenName,
                 token,
                 new CookieOptions
                 {
