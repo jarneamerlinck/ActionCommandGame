@@ -33,7 +33,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             await _tokenStore.SaveTokenAsync(string.Empty);
             await HttpContext.SignOutAsync();
-            return RedirectToLocal("/");
+            return RedirectToAction("Index", "Home");
         }
         public IActionResult AccessDenied(string returnUrl)
         {
@@ -56,6 +56,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
                 ReturnUrl = returnUrl
             });
         }
+        
         [Route("/login")]
         [Route("/account/login")]
         [HttpPost]
