@@ -98,12 +98,60 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
             
 
-            return RedirectToLocal(request.ReturnUrl);
+            return RedirectToAction("PickPlayer", "Game");
         }
 
+        [Route("/register")]
+        [Route("/account/register")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(UserRegistrationRequest request)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Username/password is not valid");
+                return View(request.ReturnUrl);
+            }
+            if (request.Email is null || request.Password is null)
+            {
+                return Login(request.ReturnUrl);
+            }
+            var signInResult = await _identityApi.RegisterAsync(request);
+            if (!signInResult.Success || signInResult.Token is null)
+            {
+                if (signInResult.Errors is not null)
+                {
+                    foreach (var error in signInResult.Errors)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
+
+                return Login("/Register");
+            }
+
+            var token = signInResult.Token;
+
+
+            await _tokenStore.SaveTokenAsync(token);
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(ClaimTypes.Email, request.Email));
+
+
+            await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+
+
+            return RedirectToAction("CreatePlayer", "Game");
+        }
+        [Route("/register")]
+        [Route("/account/register")]
+        [HttpGet]
+        [ValidateAntiForgeryToken]
         public IActionResult Register(string returnUrl)
         {
-            var registerModel = new RegisterModel
+            
+            var registerModel = new UserRegistrationRequest
             {
                 ReturnUrl = returnUrl
             };
@@ -111,7 +159,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         }
         public IActionResult ForgotPassword(string returnUrl)
         {
-            var registerModel = new RegisterModel
+            var registerModel = new UserRegistrationRequest
             {
                 ReturnUrl = "/Shop"
             };

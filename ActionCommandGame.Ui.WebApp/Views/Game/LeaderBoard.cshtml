@@ -14,6 +14,7 @@
     else if (@Model.Count < 4)
     {
         showTopPlayers = true;
+        //@Model.OrderByDescending(i=> i.Money);
         foreach (var playerResult in @Model)
         {
             topPlayers.Add(playerResult);
@@ -25,21 +26,16 @@
     {
         showTopPlayers = true;
         showOtherPlayers = true;
-        for (var i=0; i < 3; i++)
-        {
-            topPlayers.Add(@Model[i]);
-        }
+        var sortedModel = @Model.OrderByDescending(p=> p.Money).Take(3);
+        topPlayers.AddRange(sortedModel);
 
         topPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
 
         var temp = topPlayers[0];
         topPlayers.RemoveAt(0);
         topPlayers.Insert(1, temp);
-
-        for (var i=3; i < @Model.Count; i++)
-        {
-            otherPlayers.Add(@Model[i]);
-        }
+        otherPlayers.AddRange(@Model.OrderByDescending(p=> p.Money).Skip(3));
+        
 
         otherPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
     }

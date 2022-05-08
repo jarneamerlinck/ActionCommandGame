@@ -22,7 +22,7 @@ builder.Services.AddApi(appSettings.ApiBaseUrl);
 
 
 builder.Services.AddTransient<ITokenStore, TokenStore>();
-
+builder.Services.AddTransient<IPlayerStore, PlayerStore>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config => {
         config.AccessDeniedPath = appSettings.SignInUrl;

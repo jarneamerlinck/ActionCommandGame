@@ -1,4 +1,4 @@
-﻿@model Player
+﻿@model ActionCommandGame.Services.Model.Results.PlayerResult
 <tr>
     <td>
         <div class="d-flex align-items-center">
@@ -10,12 +10,16 @@
     </td>
     <td>
         <div class="d-flex align-items-end">
-            <h4 class="mr-1">@Model.Cash €</h4>
+            <h4 class="mr-1">@Model.Money €</h4>
         </div>
     </td>
     <td>
         <div class="d-flex align-items-end">
-            <a type="button" class="btn Playerbtn" asp-action="Index" asp-route-id="@Model.Id">Select</a>
+            <form method="post" asp-controller="Game" asp-action="PickPlayer">
+                <input asp-for="Id" type="hidden" value="@Model.Id">
+                
+                <input type="submit" placeholder="Select" class="btn float-end Playerbtn">
+            </form>
         </div>
     </td>
 </tr>

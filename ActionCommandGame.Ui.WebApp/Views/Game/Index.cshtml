@@ -1,0 +1,12 @@
+﻿
+@model ActionCommandGame.Services.Model.Results.PlayerResult
+@{
+    ViewData["Title"] = "Game Page";
+
+    
+}
+
+<partial name="PlayerHeaderPartial" model="@Model"/>
+<div class="container-fluid row">
+    <a type="button" class="btn Userbtn" asp-action="Mine" asp-route-id="">Mine</a>
+</div>

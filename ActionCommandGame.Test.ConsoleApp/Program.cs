@@ -26,6 +26,8 @@ var serviceProvider = serviceCollection.BuildServiceProvider();
 var identityApi = serviceProvider.GetRequiredService<IIdentityApi>();
 var tokenStore = serviceProvider.GetRequiredService<ITokenStore>();
 var playerApi = serviceProvider.GetRequiredService<IPlayerApi>();
+var itemApi = serviceProvider.GetRequiredService<IItemApi>();
+var gameApi = serviceProvider.GetRequiredService<IGameApi>();
 var existingPlayerToken = "";
 
 
@@ -144,5 +146,54 @@ catch (Exception e)
     Console.WriteLine(e);
 
 }
-;
 
+
+
+Console.ReadLine();
+
+Console.Clear();
+Console.WriteLine("Login and select player and buy something");
+await tokenStore.SaveTokenAsync(existingPlayerToken);
+var playersResult = await playerApi.Find(new PlayerFilter
+{
+    FilterUserPlayers = false
+});
+if (!playerResult.IsSuccess || playerResult.Data is null)
+{
+    Console.WriteLine("Error");
+}
+else
+{
+    var player = playerResult.Data[2];
+    Console.WriteLine($"{player.Id}:{player.Name} has {player.Money}");
+    var itemListResult = await itemApi.FindAsync();
+    if (!itemListResult.IsSuccess || itemListResult.Data is null)
+    {
+        Console.Write("Error");
+    }
+    else
+    {
+        var itemList = itemListResult.Data;
+        foreach (var item in itemList)
+        {
+            Console.WriteLine($"{item.Id}:{item.Name} costs {item.Price}");
+
+        }
+        Console.WriteLine($"{player.Id}:{player.Name} has {player.Money}");
+        await gameApi.BuyAsync(player.Id, itemList[1].Id);
+        Console.WriteLine("player has bought item 1");
+
+        playersResult = await playerApi.Find(new PlayerFilter
+        {
+            FilterUserPlayers = false
+        });
+        player = playerResult.Data[2];
+        Console.WriteLine($"{player.Id}:{player.Name} has {player.Money}");
+        
+        
+    }
+    
+
+}
+
+Console.ReadLine();

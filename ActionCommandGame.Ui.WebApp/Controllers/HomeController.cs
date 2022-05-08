@@ -71,59 +71,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             return View(_user);
         }
-        [Authorize]
-        [Route("/shop")]
-        public async Task<IActionResult> Shop()
-        {
-            var itemsRequest = await _itemApi.FindAsync();
-            if (!itemsRequest.IsSuccess)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View(itemsRequest.Data);
-        }
-        [Authorize]
-        public IActionResult Buy(ShopItem shopItem)
-        {
-
-            return RedirectToAction("index");
-        }
-        [Authorize]
-        public async Task<IActionResult> Mine()
-        {
-            var token = await _tokenStore.GetTokenAsync();
-            if (token == null)
-            {
-                return RedirectToAction("index");
-            }
-            return RedirectToAction("LeaderBoard");
-
-        }
-
-        public IActionResult Inventory()
-        {
-            return RedirectToAction("index");
-        }
-
-        public async Task<IActionResult> LeaderBoard()
-        {
-            var playerResult = await _playerApi.Find(new PlayerFilter
-            {
-                FilterUserPlayers = false
-            });
-            if (!playerResult.IsSuccess)
-            {
-                return View("Index");
-            }
-            return View(playerResult.Data);
-        }
-
-        public IActionResult PickPlayer()
-        {
-            return View(_user);
-        }
-
-
+        
 
 
 
