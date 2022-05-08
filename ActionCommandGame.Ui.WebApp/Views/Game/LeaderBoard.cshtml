@@ -1,21 +1,25 @@
-﻿@model IList<ActionCommandGame.Services.Model.Results.PlayerResult>
+﻿@using ActionCommandGame.Services.Model.Results
+@model User
 @{
-    var topPlayers = new List<ActionCommandGame.Services.Model.Results.PlayerResult>();
-    var otherPlayers = new List<ActionCommandGame.Services.Model.Results.PlayerResult>();
-    bool showTopPlayers = false;
-    bool showOtherPlayers = false;
+    
 
+    var topPlayers = new List<PlayerResult>();
+    
+    var otherPlayers = new List<PlayerResult>();
+    var showTopPlayers = false;
+    var showOtherPlayers = false;
+    var payerList = @Model.Players;
 
-    if (@Model.Count == 0)
+    if (payerList.Count == 0)
     {
         topPlayers = null;
         otherPlayers = null;
     }
-    else if (@Model.Count < 4)
+    else if (payerList.Count < 4)
     {
         showTopPlayers = true;
         //@Model.OrderByDescending(i=> i.Money);
-        foreach (var playerResult in @Model)
+        foreach (var playerResult in payerList)
         {
             topPlayers.Add(playerResult);
         }
@@ -26,7 +30,7 @@
     {
         showTopPlayers = true;
         showOtherPlayers = true;
-        var sortedModel = @Model.OrderByDescending(p=> p.Money).Take(3);
+        var sortedModel = payerList.OrderByDescending(p=> p.Money).Take(3);
         topPlayers.AddRange(sortedModel);
 
         topPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
@@ -34,17 +38,18 @@
         var temp = topPlayers[0];
         topPlayers.RemoveAt(0);
         topPlayers.Insert(1, temp);
-        otherPlayers.AddRange(@Model.OrderByDescending(p=> p.Money).Skip(3));
+        otherPlayers.AddRange(payerList.OrderByDescending(p=> p.Money).Skip(3));
         
 
         otherPlayers.Sort((player, player1) => player1.Money.CompareTo(player.Money));
     }
     
 
+    
 }
-
+<partial name="../Home/UserHeaderPartial" model="@Model"/>
 <div class="container">	
-@if (@Model.Count == 0)
+@if (payerList.Count == 0)
 {
 	<p>No players for user</p>
 }

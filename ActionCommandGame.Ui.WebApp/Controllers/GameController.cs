@@ -1,6 +1,7 @@
 ﻿using ActionCommandGame.Ui.WebApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Services.Model.Filters;
 using ActionCommandGame.Services.Model.Results;
@@ -19,6 +20,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         private readonly IPlayerApi _playerApi;
         private readonly IItemApi _itemApi;
         private readonly IGameApi _gameApi;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme;
 
         public GameController(IIdentityApi identityApi, 
@@ -26,7 +28,8 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
                                 IPlayerStore playerStore,
                                 IPlayerApi playerApi,
                                 IItemApi itemApi,
-                                IGameApi gameApi)
+                                IGameApi gameApi,
+                                IHttpContextAccessor httpContextAccessor)
         {
             _identityApi = identityApi;
             _playerApi = playerApi;
@@ -34,7 +37,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             _tokenStore = tokenStore;
             _playerStore = playerStore;
             _gameApi = gameApi;
-
+            _httpContextAccessor = httpContextAccessor;
         }
         
 
@@ -80,29 +83,37 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         public async Task<IActionResult> LeaderBoard()
         {
+
+
             var playersResult = await _playerApi.Find(new PlayerFilter
             {
                 FilterUserPlayers = false
             });
+
+
             if (!playersResult.IsSuccess)
             {
                 return RedirectToAction("index", "Home");
             }
-            return View(playersResult.Data);
+            
+            var user = new User
+            {
+                Players = playersResult.Data,
+                UserName = "Tester"
+
+            };
+            return View(user);
         }
         [HttpGet]
         public async Task<IActionResult> PickPlayer()
         {
-            var playerList = await _playerApi.Find(new PlayerFilter
-            {
-                FilterUserPlayers = false
-            });
-            return View(playerList.Data);
+            var user = await GetUser();
+            return View(user);
         }
         [HttpPost]
-        public async Task<IActionResult> PickPlayer([FromForm] int Id)
+        public async Task<IActionResult> PickPlayer([FromForm] int id)
         {
-            await _playerStore.SaveTokenAsync(Id);
+            await _playerStore.SaveTokenAsync(id);
             return RedirectToAction("index");
         }
 
@@ -120,6 +131,34 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
 
             return View();
+        }
+
+        private async Task<User> GetUser()
+        {
+            var playersResult = await _playerApi.Find(new PlayerFilter
+            {
+                FilterUserPlayers = false
+            });
+
+            if (_httpContextAccessor.HttpContext is null|| !playersResult.IsSuccess)
+            {
+                return null;
+            }
+
+
+            //var emailClaim = _httpContextAccessor.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.Email);
+            //var username = emailClaim.GetEnumerator().Current.Value;
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            var emailClaim = claimsIdentity.FindFirst(ClaimTypes.Email);
+            var username = emailClaim.Value;
+            var user = new User
+            {
+                Players = playersResult.Data,
+                UserName = username
+
+            };
+            
+            return user;
         }
 
         

@@ -11,65 +11,17 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IIdentityApi _identityApi;
-        private readonly ITokenStore _tokenStore;
-        private readonly User _user;
-        private readonly IPlayerApi _playerApi;
-        private readonly IItemApi _itemApi;
-        private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme;
 
-        public HomeController(IIdentityApi identityApi, 
-                                ITokenStore tokenStore, 
-                                IPlayerApi playerApi,
-                                IItemApi itemApi)
+
+        public HomeController()
         {
-            _identityApi = identityApi;
-            _playerApi = playerApi;
-            _itemApi = itemApi;
-            _tokenStore = tokenStore;
 
-            List<Player> temPlayers = new List<Player>
-            {
-                new Player
-                {
-                    Id = 0,
-                    Cash = 539,
-                    Name = "TestPlayer",
-                    ImageLocation = "../images/playerImage_01.png"
-                },
-                new Player
-                {
-                    Id = 1,
-                    Cash = 349,
-                    Name = "SkyLander",
-                    ImageLocation = "../images/playerImage_02.png"
-                },
-                new Player
-                {
-                    Id = 2,
-                    Cash = 3249,
-                    Name = "Eragon",
-                    ImageLocation = "../images/playerImage_03.png"
-                },
-                new Player
-                {
-                    Id = 3,
-                    Cash = 12,
-                    Name = "Vader",
-                    ImageLocation = "../images/playerImage_04.png"
-                },
-            };
-
-            _user = new User
-            {
-                Id = 0, 
-                Players = temPlayers
-            };
+           
         }
         
         public IActionResult Index()
         {
-            return View(_user);
+            return View();
         }
         
 

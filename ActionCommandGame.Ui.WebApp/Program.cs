@@ -6,6 +6,7 @@ using ActionCommandGame.Sdk.Extensions;
 using ActionCommandGame.Ui.WebApp;
 using ActionCommandGame.Ui.WebApp.Models;
 using ActionCommandGame.Ui.WebApp.Settings;
+using ActionCommandGame.Ui.WebApp.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;

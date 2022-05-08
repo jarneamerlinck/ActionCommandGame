@@ -18,17 +18,15 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
     {
 
         private readonly IIdentityApi _identityApi;
-        //private readonly IPlayerApi _playerApi;
         private readonly ITokenStore _tokenStore;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AccountController(IIdentityApi identityApi, /*IPlayerApi playerApi,*/ ITokenStore tokenStore, IHttpContextAccessor contextAccessor)
+
+        public AccountController(IIdentityApi identityApi, ITokenStore tokenStore)
         {
 
             _identityApi = identityApi;
-           // _playerApi = playerApi;
             _tokenStore = tokenStore;
-            _httpContextAccessor = contextAccessor;
+            
         }
 
         public async Task<IActionResult> Logout(string returnUrl)

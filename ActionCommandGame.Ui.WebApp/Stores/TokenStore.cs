@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ActionCommandGame.Sdk.Abstractions;
 
-namespace ActionCommandGame.Ui.WebApp.Models
+namespace ActionCommandGame.Ui.WebApp.Stores
 {
     public class TokenStore: ITokenStore
     {
