@@ -16,7 +16,7 @@ namespace ActionCommandGame.Model
         public int Money { get; set; }
         public int Experience { get; set; }
         public DateTime? LastActionExecutedDateTime { get; set; }
-
+        public string ImageLocation { get; set; }
         public string UserId { get; set; }
 
         public int? CurrentFuelPlayerItemId { get; set; }

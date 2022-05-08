@@ -63,10 +63,10 @@ namespace ActionCommandGame.Repository
                 Price = 10000000
             });
 
-            Players.Add(new Player { UserId = user.Id, Name = "John Doe", Money = 100 });
-            Players.Add(new Player { UserId = user.Id, Name = "John Francks", Money = 100000, Experience = 2000 });
-            Players.Add(new Player { UserId = user.Id, Name = "Luc Doleman", Money = 500, Experience = 5 });
-            Players.Add(new Player { UserId = user.Id, Name = "Emilio Fratilleci", Money = 12345, Experience = 200 });
+            Players.Add(new Player { ImageLocation = "../images/playerImage_01.png", UserId = user.Id, Name = "John Doe", Money = 100  });
+            Players.Add(new Player { ImageLocation = "../images/playerImage_02.png", UserId = user.Id, Name = "John Francks", Money = 100000, Experience = 2000 });
+            Players.Add(new Player { ImageLocation = "../images/playerImage_03.png", UserId = user.Id, Name = "Luc Doleman", Money = 500, Experience = 5  });
+            Players.Add(new Player { ImageLocation = "../images/playerImage_04.png", UserId = user.Id, Name = "Emilio Fratilleci", Money = 12345, Experience = 200 });
 
             SaveChanges();
         }

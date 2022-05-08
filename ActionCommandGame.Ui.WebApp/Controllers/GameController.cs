@@ -115,6 +115,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             await _playerStore.SaveTokenAsync(id);
             return RedirectToAction("index");
+            
         }
 
 
@@ -146,19 +147,16 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             }
 
 
-            //var emailClaim = _httpContextAccessor.HttpContext.User.Claims.Where(x => x.Type == ClaimTypes.Email);
-            //var username = emailClaim.GetEnumerator().Current.Value;
             var claimsIdentity = User.Identity as ClaimsIdentity;
             var emailClaim = claimsIdentity.FindFirst(ClaimTypes.Email);
             var username = emailClaim.Value;
-            var user = new User
+
+            return new User
             {
                 Players = playersResult.Data,
                 UserName = username
 
             };
-            
-            return user;
         }
 
         

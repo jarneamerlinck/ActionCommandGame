@@ -189,8 +189,8 @@ else
         });
         player = playerResult.Data[2];
         Console.WriteLine($"{player.Id}:{player.Name} has {player.Money}");
-        
-        
+        Console.WriteLine(player.ImageLocation);
+
     }
     
 
