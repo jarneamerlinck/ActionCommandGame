@@ -104,7 +104,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [Route("/account/register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(UserRegistrationRequest request)
+        public async Task<IActionResult> Register([FromForm] UserRegistrationRequest request)
         {
 
             if (!ModelState.IsValid)
@@ -116,12 +116,12 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             {
                 return Login(request.ReturnUrl);
             }
-            var signInResult = await _identityApi.RegisterAsync(request);
-            if (!signInResult.Success || signInResult.Token is null)
+            var registerResult = await _identityApi.RegisterAsync(request);
+            if (!registerResult.Success || registerResult.Token is null)
             {
-                if (signInResult.Errors is not null)
+                if (registerResult.Errors is not null)
                 {
-                    foreach (var error in signInResult.Errors)
+                    foreach (var error in registerResult.Errors)
                     {
                         ModelState.AddModelError("", error);
                     }
@@ -130,7 +130,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
                 return Login("/Register");
             }
 
-            var token = signInResult.Token;
+            var token = registerResult.Token;
 
 
             await _tokenStore.SaveTokenAsync(token);
@@ -146,7 +146,6 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [Route("/register")]
         [Route("/account/register")]
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public IActionResult Register(string returnUrl)
         {
             

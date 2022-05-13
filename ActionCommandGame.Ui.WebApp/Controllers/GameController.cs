@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Security.Claims;
 using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Services.Model.Filters;
+using ActionCommandGame.Services.Model.Requests;
 using ActionCommandGame.Services.Model.Results;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -122,16 +123,22 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
 
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+
+
+        [HttpGet]
+        public async Task<IActionResult> CreatePlayer()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var user = await GetUser();
+            return View(user);
         }
-
-        public IActionResult CreatePlayer()
+        [HttpPost]
+        public async Task<IActionResult> CreatePlayer([FromForm] CreatePlayerRequest player)
         {
+            
+            var userResult = await GetUser();
+            var createPlayer = await _playerApi.CreatePlayer(player);
+            return RedirectToAction("PickPlayer");
 
-            return View();
         }
 
         private async Task<User> GetUser()
@@ -158,7 +165,12 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
             };
         }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
 
-        
+
     }
 }

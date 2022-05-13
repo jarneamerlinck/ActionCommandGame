@@ -1,6 +1,7 @@
 ﻿using ActionCommandGame.Api.Authentication.Extensions;
 using ActionCommandGame.Services.Abstractions;
 using ActionCommandGame.Services.Model.Filters;
+using ActionCommandGame.Services.Model.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActionCommandGame.Api.Controllers
@@ -22,9 +23,15 @@ namespace ActionCommandGame.Api.Controllers
         }
 
         [HttpGet("players")]
-        public async Task<IActionResult> Find([FromQuery]PlayerFilter filter)
+        public async Task<IActionResult> Find([FromQuery] PlayerFilter filter)
         {
             var result = await _playerService.FindAsync(filter, User.GetId());
+            return Ok(result);
+        }
+        [HttpPost("players")]
+        public async Task<IActionResult> CreatePlayer(CreatePlayerRequest playerRequest)
+        {
+            var result = await _playerService.CreatePlayer(playerRequest, User.GetId());
             return Ok(result);
         }
     }
