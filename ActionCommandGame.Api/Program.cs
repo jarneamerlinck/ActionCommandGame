@@ -11,6 +11,8 @@ var app = builder.Build();
 
 //Initialize dbContext data
 using var scope = app.Services.CreateScope();
+
+
 var dbContext = scope.ServiceProvider.GetRequiredService<ActionCommandGameDbContext>();
 
 if (dbContext.Database.IsInMemory())

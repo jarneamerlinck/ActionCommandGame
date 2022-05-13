@@ -13,6 +13,7 @@ namespace ActionCommandGame.Repository
             
         }
 
+
         public DbSet<PositiveGameEvent> PositiveGameEvents { get; set; }
         public DbSet<NegativeGameEvent> NegativeGameEvents { get; set; }
         public DbSet<Item> Items { get; set; }

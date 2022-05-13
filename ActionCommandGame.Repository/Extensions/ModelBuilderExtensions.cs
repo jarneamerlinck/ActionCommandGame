@@ -9,6 +9,12 @@ namespace ActionCommandGame.Repository.Extensions
         {
             foreach (IMutableEntityType entity in builder.Model.GetEntityTypes())
             {
+                var tableName =  entity.GetTableName();
+                if (tableName is not null && tableName.ToLower().StartsWith("aspnet"))
+                {
+                    continue;
+                }
+
                 entity.SetTableName(entity.DisplayName());
             }
         }
