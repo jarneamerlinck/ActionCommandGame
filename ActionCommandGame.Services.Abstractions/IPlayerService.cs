@@ -11,6 +11,6 @@ namespace ActionCommandGame.Services.Abstractions
     {
         Task<ServiceResult<PlayerResult>> GetAsync(int id, string authenticatedUserId);
         Task<ServiceResult<IList<PlayerResult>>> FindAsync(PlayerFilter filter, string authenticatedUserId);
-        Task<ServiceResult<bool>> CreatePlayer(CreatePlayerRequest playerRequest, string authenticatedUserId);
+        Task<ServiceResult<CreatePlayerResult>> CreatePlayer(CreatePlayerRequest playerRequest, string authenticatedUserId);
     }
 }

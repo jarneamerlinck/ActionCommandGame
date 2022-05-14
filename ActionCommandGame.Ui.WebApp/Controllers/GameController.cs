@@ -46,7 +46,15 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var playerId = await _playerStore.GetTokenAsync();
+            if (playerId < 0)
+            {
+                return RedirectToAction("PickPlayer");
+            }
             var player = await _playerApi.GetAsync(playerId);
+            if (!player.IsSuccess || player.Data is null)
+            {
+                return RedirectToAction("PickPlayer");
+            }
             return View(player.Data);
         }
 
@@ -109,6 +117,10 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         public async Task<IActionResult> PickPlayer()
         {
             var user = await GetUser();
+            if (user.Players is null || user.Players.Count is 0)
+            {
+                return RedirectToAction("CreatePlayer");
+            }
             return View(user);
         }
         [HttpPost]
@@ -121,21 +133,16 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
 
 
-
-
-
-
         [HttpGet]
-        public async Task<IActionResult> CreatePlayer()
+        public IActionResult CreatePlayer()
         {
-            var user = await GetUser();
-            return View(user);
+            return View(new CreatePlayerRequest());
         }
         [HttpPost]
         public async Task<IActionResult> CreatePlayer([FromForm] CreatePlayerRequest player)
         {
             
-            var userResult = await GetUser();
+            //var userResult = await GetUser();
             var createPlayer = await _playerApi.CreatePlayer(player);
             return RedirectToAction("PickPlayer");
 
@@ -145,7 +152,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             var playersResult = await _playerApi.Find(new PlayerFilter
             {
-                FilterUserPlayers = false
+                FilterUserPlayers = true
             });
 
             if (_httpContextAccessor.HttpContext is null|| !playersResult.IsSuccess)

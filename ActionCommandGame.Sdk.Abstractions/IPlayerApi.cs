@@ -9,6 +9,6 @@ namespace ActionCommandGame.Sdk.Abstractions
     {
         Task<ServiceResult<PlayerResult>> GetAsync(int id);
         Task<ServiceResult<IList<PlayerResult>>> Find(PlayerFilter filter);
-        Task<ServiceResult<bool>> CreatePlayer(CreatePlayerRequest player);
+        Task<ServiceResult<CreatePlayerResult>> CreatePlayer(CreatePlayerRequest player);
     }
 }

@@ -3,6 +3,7 @@ using ActionCommandGame.Services.Abstractions;
 using ActionCommandGame.Services.Model.Filters;
 using ActionCommandGame.Services.Model.Requests;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace ActionCommandGame.Api.Controllers
 {
@@ -29,8 +30,19 @@ namespace ActionCommandGame.Api.Controllers
             return Ok(result);
         }
         [HttpPost("players")]
-        public async Task<IActionResult> CreatePlayer(CreatePlayerRequest playerRequest)
+        public async Task<IActionResult> CreatePlayer([FromBody] CreatePlayerRequest playerRequest)
         {
+            if (playerRequest is null || playerRequest.Name is null)
+            {
+                return Ok("result");
+            }
+            /*var headers = content.Headers.GetEnumerator();
+            var playerRequest = new CreatePlayerRequest()
+            {
+
+                Name = content.ToString(),
+
+            };*/
             var result = await _playerService.CreatePlayer(playerRequest, User.GetId());
             return Ok(result);
         }

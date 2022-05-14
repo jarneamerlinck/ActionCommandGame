@@ -19,19 +19,22 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         private readonly IIdentityApi _identityApi;
         private readonly ITokenStore _tokenStore;
+        private readonly IPlayerStore _playerStore;
 
 
-        public AccountController(IIdentityApi identityApi, ITokenStore tokenStore)
+        public AccountController(IIdentityApi identityApi, ITokenStore tokenStore, IPlayerStore playerStore)
         {
 
             _identityApi = identityApi;
             _tokenStore = tokenStore;
-            
+            _playerStore = playerStore;
         }
-
+        [Route("/logout")]
+        [Route("/account/logout")]
         public async Task<IActionResult> Logout(string returnUrl)
         {
             await _tokenStore.SaveTokenAsync(string.Empty);
+            await _playerStore.SaveTokenAsync(-1);
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

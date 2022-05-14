@@ -41,7 +41,7 @@ namespace ActionCommandGame.Services
             return new ServiceResult<IList<PlayerResult>>(players);
         }
 
-        public async Task<ServiceResult<bool>> CreatePlayer(CreatePlayerRequest playerRequest, string authenticatedUserId)
+        public async Task<ServiceResult<CreatePlayerResult>> CreatePlayer(CreatePlayerRequest playerRequest, string authenticatedUserId)
         {
             var player = new Player
             {
@@ -52,7 +52,12 @@ namespace ActionCommandGame.Services
             };
 
             await _database.Players.AddAsync(player);
-            return new ServiceResult<bool>(true);
+            _database.SaveChanges();
+            var result = new CreatePlayerResult
+            {
+                Name = playerRequest.Name
+            };
+            return new ServiceResult<CreatePlayerResult>(result);
 
         }
     }
