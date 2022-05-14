@@ -36,13 +36,6 @@ namespace ActionCommandGame.Api.Controllers
             {
                 return Ok("result");
             }
-            /*var headers = content.Headers.GetEnumerator();
-            var playerRequest = new CreatePlayerRequest()
-            {
-
-                Name = content.ToString(),
-
-            };*/
             var result = await _playerService.CreatePlayer(playerRequest, User.GetId());
             return Ok(result);
         }
