@@ -1,12 +1,25 @@
 ﻿
-@model ActionCommandGame.Services.Model.Results.PlayerResult
+@model PlayerAction
 @{
     ViewData["Title"] = "Game Page";
+    var player = @Model.Player;
 
+    var gameResult = @Model.GameResult;
     
 }
 
-<partial name="PlayerHeaderPartial" model="@Model"/>
+<partial name="PlayerHeaderPartial" model="@player"/>
 <div class="container-fluid row">
-    <a type="button" class="btn Userbtn" asp-action="Mine" asp-route-id="">Mine</a>
+    @if(gameResult is not null && @Model.Messages is null)
+    {
+        <partial name="GameResultPartial" model="@gameResult"/>
+    }
+    @if(@Model.Messages is not null)
+    {   @foreach (var message in @Model.Messages)
+    {
+        <h6 class="redText">@message.Message</h6>
+    }
+        
+    }
+    <a type="button" class="btn Userbtn" asp-action="PerformAction">Go hunting</a>
 </div>

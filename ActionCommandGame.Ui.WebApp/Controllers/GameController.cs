@@ -43,7 +43,44 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         
 
 
+
         public async Task<IActionResult> Index()
+        {
+
+            var playerId = await _playerStore.GetTokenAsync();
+            if (playerId < 0)
+            {
+                return RedirectToAction("PickPlayer");
+            }
+            var player = await _playerApi.GetAsync(playerId);
+            if (!player.IsSuccess || player.Data is null)
+            {
+                return RedirectToAction("PickPlayer");
+            }
+            return View(new PlayerAction
+            {
+                Player = player.Data
+            });
+        }
+
+        [Route("/shop")]
+        public async Task<IActionResult> Shop()
+        {   
+
+            var itemsRequest = await _itemApi.FindAsync();
+            if (!itemsRequest.IsSuccess)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(itemsRequest.Data);
+        }
+        public async Task<IActionResult> Buy(ItemResult shopItem)
+        {
+            var playerId = await _playerStore.GetTokenAsync();
+            var buyResult = await _gameApi.BuyAsync(playerId, shopItem.Id);
+            return RedirectToAction("index");
+        }
+        public async Task<IActionResult> PerformAction()
         {
             var playerId = await _playerStore.GetTokenAsync();
             if (playerId < 0)
@@ -55,33 +92,22 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             {
                 return RedirectToAction("PickPlayer");
             }
-            return View(player.Data);
-        }
-
-        [Route("/shop")]
-        public async Task<IActionResult> Shop()
-        {   
-
-            var itemsRequest = await _itemApi.FindAsync();
-            if (!itemsRequest.IsSuccess)
+            var gameResult = await _gameApi.PerformActionAsync(playerId);
+            if (!gameResult.IsSuccess || gameResult.Data is null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("index");
             }
-            return View(itemsRequest.Data);
-        }
-        public async Task<IActionResult> Buy(ItemResult shopItem)
-        {
-            var playerId = await _playerStore.GetTokenAsync();
-            var buyResult = await _gameApi.BuyAsync(playerId, shopItem.Id);
-            return RedirectToAction("index");
-        }
-        public async Task<IActionResult> Mine()
-        {
-            var playerId = await _playerStore.GetTokenAsync();
-            await _gameApi.PerformActionAsync(playerId);
-  
+
+            var result = new PlayerAction()
+            {
+                Player = player.Data,
+                GameResult = gameResult.Data,
+                Messages = gameResult.Messages
+                
+            };
+            return View("Index", result);
+
             
-            return RedirectToAction("LeaderBoard");
 
         }
 
@@ -148,6 +174,8 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         }
 
+
+        
         private async Task<User> GetUser()
         {
             var playersResult = await _playerApi.Find(new PlayerFilter
