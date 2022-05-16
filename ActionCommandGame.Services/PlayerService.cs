@@ -47,7 +47,8 @@ namespace ActionCommandGame.Services
             {
                 Name = playerRequest.Name,
                 ImageLocation = playerRequest.ImageLocation,
-                UserId = authenticatedUserId
+                UserId = authenticatedUserId,
+                Money = 100
 
             };
 
