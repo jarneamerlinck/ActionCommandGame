@@ -15,6 +15,7 @@ namespace ActionCommandGame.Services.Extensions
                 UserId = p.UserId,
                 Experience = p.Experience,
                 Money = p.Money,
+                ImageLocation = p.ImageLocation,
                 LastActionExecutedDateTime = p.LastActionExecutedDateTime,
                 CurrentAttackId = p.CurrentAttackPlayerItemId,
                 CurrentAttackName = p.CurrentAttackPlayerItemId.HasValue ? p.CurrentAttackPlayerItem.Item.Name : string.Empty,
