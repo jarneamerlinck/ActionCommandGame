@@ -33,16 +33,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         
 
     });
-/*
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("player", policy =>
-    {
-        policy.AuthenticationSchemes.Add(CookieAuthenticationDefaults.AuthenticationScheme);
-        policy.RequireAuthenticatedUser();
-    });
-});*/
-// Add services to the container.
+
 builder.Services.AddControllersWithViews();
 
 
