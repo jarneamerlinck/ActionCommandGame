@@ -21,15 +21,17 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         private readonly IPlayerApi _playerApi;
         private readonly IItemApi _itemApi;
         private readonly IGameApi _gameApi;
+        private readonly IPlayerItemApi _playerItemApi;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const string AuthSchemes = CookieAuthenticationDefaults.AuthenticationScheme;
 
-        public GameController(IIdentityApi identityApi, 
+        public GameController(IIdentityApi identityApi,
                                 ITokenStore tokenStore,
                                 IPlayerStore playerStore,
                                 IPlayerApi playerApi,
                                 IItemApi itemApi,
                                 IGameApi gameApi,
+                                IPlayerItemApi playerItemApi,
                                 IHttpContextAccessor httpContextAccessor)
         {
             _identityApi = identityApi;
@@ -38,34 +40,28 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             _tokenStore = tokenStore;
             _playerStore = playerStore;
             _gameApi = gameApi;
+            _playerItemApi = playerItemApi;
             _httpContextAccessor = httpContextAccessor;
+
         }
-        
+
 
 
 
         public async Task<IActionResult> Index()
         {
 
-            var playerId = await _playerStore.GetTokenAsync();
-            if (playerId < 0)
+            var playerAction = await CreatePlayerAction();
+            if (playerAction is null)
             {
                 return RedirectToAction("PickPlayer");
             }
-            var player = await _playerApi.GetAsync(playerId);
-            if (!player.IsSuccess || player.Data is null)
-            {
-                return RedirectToAction("PickPlayer");
-            }
-            return View(new PlayerAction
-            {
-                Player = player.Data
-            });
+            return View(playerAction);
         }
 
         [Route("/shop")]
         public async Task<IActionResult> Shop()
-        {   
+        {
 
             var itemsRequest = await _itemApi.FindAsync();
             if (!itemsRequest.IsSuccess)
@@ -82,38 +78,40 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         }
         public async Task<IActionResult> PerformAction()
         {
-            var playerId = await _playerStore.GetTokenAsync();
-            if (playerId < 0)
+            var playerAction = CreatePlayerAction().Result;
+            if (playerAction is null)
             {
                 return RedirectToAction("PickPlayer");
             }
-            var player = await _playerApi.GetAsync(playerId);
-            if (!player.IsSuccess || player.Data is null)
-            {
-                return RedirectToAction("PickPlayer");
-            }
-            var gameResult = await _gameApi.PerformActionAsync(playerId);
+            var gameResult = await _gameApi.PerformActionAsync(playerAction.Id);
             if (!gameResult.IsSuccess || gameResult.Data is null)
             {
                 return RedirectToAction("index");
             }
 
-            var result = new PlayerAction()
-            {
-                Player = player.Data,
-                GameResult = gameResult.Data,
-                Messages = gameResult.Messages
-                
-            };
-            return View("Index", result);
+            playerAction.GameResult = gameResult.Data;
+            playerAction.Messages = gameResult.Messages;
 
-            
+            return View("Index", playerAction);
+
+
 
         }
 
-        public IActionResult Inventory()
+        public async Task<IActionResult> Inventory()
         {
-            return RedirectToAction("index");
+            var playerAction = await CreatePlayerAction();
+            if (playerAction is null)
+            {
+                return RedirectToAction("PickPlayer");
+            }
+
+            var inventory = await _playerItemApi.FindAsync(new PlayerItemFilter
+            {
+                PlayerId = playerAction.Id
+            });
+            playerAction.Items = inventory.Data;
+            return View(playerAction);
         }
 
         public async Task<IActionResult> LeaderBoard()
@@ -130,7 +128,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             {
                 return RedirectToAction("index", "Home");
             }
-            
+
             var user = new User
             {
                 Players = playersResult.Data,
@@ -154,7 +152,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         {
             await _playerStore.SaveTokenAsync(id);
             return RedirectToAction("index");
-            
+
         }
 
 
@@ -167,15 +165,31 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePlayer([FromForm] CreatePlayerRequest player)
         {
-            
-            //var userResult = await GetUser();
             var createPlayer = await _playerApi.CreatePlayer(player);
             return RedirectToAction("PickPlayer");
 
         }
 
+        private async Task<PlayerAction?> CreatePlayerAction()
+        {
+            var playerId = await _playerStore.GetTokenAsync();
+            if (playerId < 0)
+            {
+                return null;
+            }
+            var player = await _playerApi.GetAsync(playerId);
+            if (!player.IsSuccess || player.Data is null)
+            {
+                return null;
+            }
 
-        
+            return new PlayerAction
+            {
+                Player = player.Data,
+                Id = playerId
+            };
+        }
+
         private async Task<User> GetUser()
         {
             var playersResult = await _playerApi.Find(new PlayerFilter
@@ -183,7 +197,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
                 FilterUserPlayers = true
             });
 
-            if (_httpContextAccessor.HttpContext is null|| !playersResult.IsSuccess)
+            if (_httpContextAccessor.HttpContext is null || !playersResult.IsSuccess)
             {
                 return null;
             }
