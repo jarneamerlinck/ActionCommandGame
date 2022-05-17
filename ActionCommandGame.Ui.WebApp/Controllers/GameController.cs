@@ -62,13 +62,23 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         [Route("/shop")]
         public async Task<IActionResult> Shop()
         {
-
+            var playerAction = await CreatePlayerAction();
+            if (playerAction is null)
+            {
+                return RedirectToAction("PickPlayer");
+            }
             var itemsRequest = await _itemApi.FindAsync();
             if (!itemsRequest.IsSuccess)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("PickPlayer");
             }
-            return View(itemsRequest.Data);
+            return View(new PlayerShop
+            {
+                Items = itemsRequest.Data,
+                Id=playerAction.Id,
+                Player = playerAction.Player
+
+            });
         }
         public async Task<IActionResult> Buy(ItemResult shopItem)
         {
@@ -116,25 +126,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         public async Task<IActionResult> LeaderBoard()
         {
-
-
-            var playersResult = await _playerApi.Find(new PlayerFilter
-            {
-                FilterUserPlayers = false
-            });
-
-
-            if (!playersResult.IsSuccess)
-            {
-                return RedirectToAction("index", "Home");
-            }
-
-            var user = new User
-            {
-                Players = playersResult.Data,
-                UserName = "Tester"
-
-            };
+            var user = await GetUser();
             return View(user);
         }
         [HttpGet]

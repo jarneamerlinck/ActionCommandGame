@@ -1,21 +1,14 @@
 ﻿
-@model IList<ActionCommandGame.Services.Model.Results.ItemResult>
+@model PlayerShop
 @{
     ViewData["Title"] = "Shop";
 
 
 }
-@if (User.Identity is not null && User.Identity.IsAuthenticated)
-{
-    <a type="button" class="btn redTextWithHover" asp-controller="Account" asp-action="Logout" asp-route-id="">Logout</a>
-}	
-else
-{
-    <a type="button" class="btn redTextWithHover" asp-controller="Account" asp-action="Login" asp-route-id="">Login</a>
-}
+<partial name="PlayerHeaderPartial" model="@Model.Player"/>
 <div class="container bg-gradient rounded">
     <div class="row">
-        @foreach(var shopListItem in @Model)
+        @foreach(var shopListItem in @Model.Items)
         {
             <partial name="ShopPartial" model="shopListItem"/>
         }
