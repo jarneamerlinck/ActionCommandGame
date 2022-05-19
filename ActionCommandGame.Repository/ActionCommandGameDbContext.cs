@@ -44,7 +44,19 @@ namespace ActionCommandGame.Repository
 
             Users.Add(user);
             SaveChanges();
-
+            email = "eragon@knightofzero.com";
+            //Password Test123$
+            passwordHash = "AQAAAAEAACcQAAAAEATmvcJfyfVBXdG4GPMFtqn82yWJiaaRvptiSVfSl7gSnHGnJgLvKs+Rvcp8G1kafQ==";
+            user = new IdentityUser
+            {
+                UserName = email,
+                Email = email,
+                NormalizedEmail = email.ToUpperInvariant(),
+                NormalizedUserName = email.ToUpperInvariant(),
+                PasswordHash = passwordHash
+            };
+            Users.Add(user);
+            SaveChanges();
             GeneratePositiveGameEvents();
             GenerateNegativeGameEvents();
             GenerateAttackItems();
