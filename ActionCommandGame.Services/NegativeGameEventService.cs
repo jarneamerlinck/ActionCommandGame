@@ -23,12 +23,12 @@ namespace ActionCommandGame.Services
         
         public async Task<ServiceResult<NegativeGameEventResult>> GetRandomNegativeGameEvent(string authenticatedUserId)
         {
-            var gameEvents = await Find(authenticatedUserId);
+            var gameEvents = await FindAsync(authenticatedUserId);
             var randomEvent = GameEventHelper.GetRandomNegativeGameEvent(gameEvents.Data);
             return new ServiceResult<NegativeGameEventResult>(randomEvent);
         }
 
-        public async Task<ServiceResult<IList<NegativeGameEventResult>>> Find(string authenticatedUserId)
+        public async Task<ServiceResult<IList<NegativeGameEventResult>>> FindAsync(string authenticatedUserId)
         {
             var negativeGameEvents = await _database.NegativeGameEvents
                 .ProjectToResult()
