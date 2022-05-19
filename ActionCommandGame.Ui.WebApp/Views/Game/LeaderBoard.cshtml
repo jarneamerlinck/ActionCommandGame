@@ -15,6 +15,11 @@
         topPlayers = null;
         otherPlayers = null;
     }
+    else if (payerList.Count == 1)
+    {
+        otherPlayers.Add(payerList[0]);
+        showOtherPlayers = true;
+    }
     else if (payerList.Count < 4)
     {
         showTopPlayers = true;
