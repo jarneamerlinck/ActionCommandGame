@@ -95,10 +95,15 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             await _tokenStore.SaveTokenAsync(token);
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaim(new Claim(ClaimTypes.Email, request.Email));
+            identity.AddClaim(new Claim(ClaimTypes.Role, request.Email.Equals("eragon@knightofzero.com") ? "Administrator" : "user"));
 
 
             await HttpContext.SignInAsync(new ClaimsPrincipal(identity));
-            
+
+            if (request.ReturnUrl.ToLower().Equals("/admin") && request.Email.Equals("eragon@knightofzero.com"))
+            {
+                return RedirectToAction("Index", "Admin");
+            }
 
             return RedirectToAction("PickPlayer", "Game");
         }

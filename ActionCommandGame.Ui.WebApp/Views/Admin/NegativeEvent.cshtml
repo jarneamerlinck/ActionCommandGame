@@ -1,0 +1,53 @@
+﻿@model IList<ActionCommandGame.Services.Model.Results.NegativeGameEventResult>
+
+@{
+    ViewData["Title"] = "Manage Negative events";
+}
+
+<div class="text-center">
+    <h1 class="display-4 yellowText">@ViewData["Title"]</h1>
+</div>
+
+<a asp-action="NegativeEventCreate" class="btn btn-primary Playerbtn">New Negative Event</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th class="yellowText">Name</th>
+        <th class="yellowText">Probability</th>
+        <th class="yellowText">Defense Loss</th>
+        <th class="yellowText">Defense With Gear Description</th>
+        <th class="yellowText">Defense Without Gear Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var negEvent in @Model)
+    {
+        <partial name="NegativeEventRowPartial" model="negEvent"/>
+    }
+    </tbody>
+</table>
+
+<div id="deleteModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Person</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <span data-text="firstName"></span> <span data-text="lastName"></span>?</p>
+            </div>
+            <div class="modal-footer">
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" name="id"/>
+                    <a class="btn btn-info" data-dismiss="modal">No</a>
+                    <button class="btn btn-warning" type="submit">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

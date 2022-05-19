@@ -88,7 +88,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
         }
         public async Task<IActionResult> PerformAction()
         {
-            var playerAction = CreatePlayerAction().Result;
+            var playerAction = await CreatePlayerAction();
             if (playerAction is null)
             {
                 return RedirectToAction("PickPlayer");
