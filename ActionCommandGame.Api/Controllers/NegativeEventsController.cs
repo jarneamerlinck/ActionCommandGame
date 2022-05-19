@@ -1,5 +1,6 @@
 ﻿using ActionCommandGame.Api.Authentication.Extensions;
 using ActionCommandGame.Services.Abstractions;
+using ActionCommandGame.Services.Model.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActionCommandGame.Api.Controllers
@@ -17,6 +18,12 @@ namespace ActionCommandGame.Api.Controllers
         public async Task<IActionResult> Find()
         {
             var result = await _negativeGameEventService.FindAsync(User.GetId());
+            return Ok(result);
+        }
+        [HttpPost("negative_events/{id}")]
+        public async Task<IActionResult> Edit([FromBody] NegativeGameEventRequest request)
+        {
+            var result = await _negativeGameEventService.EditAsync(request.Id, request, User.GetId());
             return Ok(result);
         }
     }

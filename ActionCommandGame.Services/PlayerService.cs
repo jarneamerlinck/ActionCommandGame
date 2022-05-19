@@ -53,7 +53,7 @@ namespace ActionCommandGame.Services
             };
 
             await _database.Players.AddAsync(player);
-            _database.SaveChanges();
+            await _database.SaveChangesAsync();
             var result = new CreatePlayerResult
             {
                 Name = playerRequest.Name

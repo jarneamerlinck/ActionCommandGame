@@ -8,7 +8,7 @@ namespace ActionCommandGame.Sdk.Abstractions
     public interface INegativeEventApi
     {
         Task<ServiceResult<IList<NegativeGameEventResult>>> FindAsync();
-        Task<NegativeGameEventResult> EditAsync(NegativeGameEventRequest request);
-        Task<NegativeGameEventResult> DeleteAsync(int eventId);
+        Task<ServiceResult<NegativeGameEventResult>> EditAsync( int id, NegativeGameEventRequest request);
+        Task<ServiceResult<NegativeGameEventResult>> DeleteAsync(int eventId);
     } 
 }
