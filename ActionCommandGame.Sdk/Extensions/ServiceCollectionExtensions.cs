@@ -23,5 +23,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IPlayerItemApi, PlayerItemApi>();
         services.AddTransient<IIdentityApi, IdentityApi>();
         services.AddTransient<INegativeEventApi, NegativeEventApi>();
+        services.AddTransient<IPositiveEventApi, PositiveEventApi>();
     }
 }
