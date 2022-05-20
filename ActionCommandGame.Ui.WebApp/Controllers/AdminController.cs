@@ -10,15 +10,19 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
     public class AdminController : Controller
     {
         private readonly INegativeEventApi _negativeEventApi;
-        public AdminController(INegativeEventApi negativeEventApi)
+        private readonly IPositiveEventApi _positiveEventApi;
+        public AdminController(INegativeEventApi negativeEventApi,
+            IPositiveEventApi positiveEventApi)
         {
             _negativeEventApi = negativeEventApi;
+            _positiveEventApi = positiveEventApi;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+        // Start negative
         public async Task<IActionResult> NegativeEvent()
         {
             var events = await _negativeEventApi.FindAsync();
@@ -136,11 +140,133 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
             return View(negEvent);
         }
-        [HttpPost("Admin/Delete/{id}")]
-        public async Task<IActionResult> ConfirmDelete([FromRoute] int id)
+        [HttpPost("Admin/DeleteNegative/{id}")]
+        public async Task<IActionResult> ConfirmDeleteNegative([FromRoute] int id)
         {
             var result = await _negativeEventApi.DeleteAsync(id);
             return RedirectToAction("NegativeEvent");
         }
+        //End Negative
+        // Start Positive
+        public async Task<IActionResult> PositiveEvent()
+        {
+            var events = await _positiveEventApi.FindAsync();
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            return View(events.Data);
+
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> PositiveEventEdit([FromRoute] int id, [FromForm] PositiveGameEventRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(new PositiveGameEventResult()
+                {
+                    Id = id,
+                    Money = request.Money,
+                    Experience = request.Experience,
+                    Description = request.Description,
+                    Name = request.Name,
+                    Probability = request.Probability
+                });
+            }
+
+            request.Id = id;
+            var result = await _positiveEventApi.EditAsync(id, request);
+            if (!result.IsSuccess)
+            {
+                return View(new PositiveGameEventResult()
+                {
+                    Id = id,
+                    Money = request.Money,
+                    Experience = request.Experience,
+                    Description = request.Description,
+                    Name = request.Name,
+                    Probability = request.Probability
+                });
+            }
+            return RedirectToAction("PositiveEvent");
+        }
+        [HttpGet]
+        public async Task<IActionResult> PositiveEventEdit(int id)
+        {
+            var events = await _positiveEventApi.FindAsync();
+
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            var posEvent = events.Data.SingleOrDefault(e => e.Id == id);
+            if (posEvent is null)
+            {
+                return RedirectToAction("index");
+            }
+            return View(posEvent);
+        }
+        [HttpGet]
+        public IActionResult PositiveEventCreate()
+        {
+            var posEvent = new PositiveGameEventResult();
+            return View(posEvent);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PositiveEventCreate([FromForm] PositiveGameEventRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(new PositiveGameEventResult
+                {
+
+                    Money = request.Money,
+                    Experience = request.Experience,
+                    Description = request.Description,
+                    Name = request.Name,
+                    Probability = request.Probability
+                });
+            }
+
+            var result = await _positiveEventApi.CreateAsync(request);
+            if (!result.IsSuccess)
+            {
+                return View(new PositiveGameEventResult
+                {
+
+                    Money = request.Money,
+                    Experience = request.Experience,
+                    Description = request.Description,
+                    Name = request.Name,
+                    Probability = request.Probability
+                });
+            }
+            return RedirectToAction("PositiveEvent");
+        }
+        [HttpGet]
+        public async Task<IActionResult> PositiveEventDelete(int id)
+        {
+            var events = await _positiveEventApi.FindAsync();
+
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            var posEvent = events.Data.SingleOrDefault(e => e.Id == id);
+            if (posEvent is null)
+            {
+                return RedirectToAction("index");
+            }
+
+            return View(posEvent);
+        }
+        [HttpPost("Admin/DeletePositive/{id}")]
+        public async Task<IActionResult> ConfirmDeletePositive([FromRoute] int id)
+        {
+            var result = await _positiveEventApi.DeleteAsync(id);
+            return RedirectToAction("PositiveEvent");
+        }
+        //End Positive
     }
 }

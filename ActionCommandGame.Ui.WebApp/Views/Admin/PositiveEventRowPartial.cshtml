@@ -1,0 +1,14 @@
+﻿@model ActionCommandGame.Services.Model.Results.PositiveGameEventResult
+
+<tr>
+    <td>@Model.Name</td>
+    <td>@Model.Probability</td>
+    <td>@Model.Description</td>
+    <td>@Model.Money</td>
+    <td>@Model.Experience</td>
+    <td>
+        <a asp-action="PositiveEventEdit" asp-route-id="@Model.Id" class="btn btn-info">Edit</a>
+        <a asp-action="PositiveEventDelete" asp-route-id="@Model.Id"  class="btn btn-warning">Delete</a>
+
+    </td>
+</tr>
