@@ -47,9 +47,7 @@ namespace ActionCommandGame.Services
             {
                 return new ServiceResult<NegativeGameEventResult>();
             }
-            var negativeGameEvents = await _database.NegativeGameEvents
-                .ProjectToResult()
-                .ToListAsync();
+            
             
             original.DefenseLoss = request.DefenseLoss;
             original.DefenseWithGearDescription = request.DefenseWithGearDescription;
@@ -58,8 +56,11 @@ namespace ActionCommandGame.Services
             original.DefenseWithoutGearDescription = request.DefenseWithoutGearDescription;
             original.Probability = request.Probability;
             await _database.SaveChangesAsync();
+            var negEventDb = (await _database.NegativeGameEvents
+                .ProjectToResult()
+                .ToListAsync())
+                .SingleOrDefault(e => e.Id == request.Id);
 
-            var negEventDb = negativeGameEvents.SingleOrDefault(e => e.Id == request.Id);
             if (negEventDb is null)
             {
                 return new ServiceResult<NegativeGameEventResult>();
