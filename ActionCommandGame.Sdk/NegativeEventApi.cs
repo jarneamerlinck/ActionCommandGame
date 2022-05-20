@@ -87,9 +87,21 @@ namespace ActionCommandGame.Sdk
             return result;
         }
 
-        public async Task<ServiceResult<NegativeGameEventResult>> DeleteAsync(int eventId)
+        public async Task<ServiceResult<bool>> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var httpClient = _httpClientFactory.CreateClient("ActionCommandGame");
+            var token = await _tokenStore.GetTokenAsync();
+            httpClient.AddAuthorization(token);
+            var route = $"negative_events/Delete/{id}";
+            
+
+            var httpResponse = await httpClient.PostAsync(route, null);
+
+            httpResponse.EnsureSuccessStatusCode();
+
+            var result = await httpResponse.Content.ReadFromJsonAsync<ServiceResult<bool>>();
+
+            return new ServiceResult<bool>(result is not null? result.IsSuccess:false);
         }
     }
 }

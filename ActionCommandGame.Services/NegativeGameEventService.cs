@@ -82,9 +82,6 @@ namespace ActionCommandGame.Services
                 Probability = request.Probability
             };
             
-
-
-            
             _database.NegativeGameEvents.Add(gameEvent);
             await _database.SaveChangesAsync();
             var negEventDb = (await _database.NegativeGameEvents
@@ -98,7 +95,18 @@ namespace ActionCommandGame.Services
             }
             return new ServiceResult<NegativeGameEventResult>(negEventDb);
 
+        }
+        public async Task<ServiceResult<bool>> DeleteAsync(int id, string authenticatedUserId)
+        {
 
+            var toRemoveObject =  _database.NegativeGameEvents.SingleOrDefault(e => e.Id == id);
+            if (toRemoveObject is null)
+            {
+                return new ServiceResult<bool>(false);
+            }
+            _database.NegativeGameEvents.Remove(toRemoveObject);
+            await _database.SaveChangesAsync();
+            return new ServiceResult<bool>(true);
 
         }
     }

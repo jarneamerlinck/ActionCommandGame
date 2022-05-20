@@ -32,5 +32,11 @@ namespace ActionCommandGame.Api.Controllers
             var result = await _negativeGameEventService.CreateAsync(request, User.GetId());
             return Ok(result);
         }
+        [HttpPost("negative_events/Delete/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var result = await _negativeGameEventService.DeleteAsync(id, User.GetId());
+            return Ok(result);
+        }
     }
 }

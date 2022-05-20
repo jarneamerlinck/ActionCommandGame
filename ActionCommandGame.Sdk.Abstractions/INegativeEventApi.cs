@@ -10,6 +10,6 @@ namespace ActionCommandGame.Sdk.Abstractions
         Task<ServiceResult<IList<NegativeGameEventResult>>> FindAsync();
         Task<ServiceResult<NegativeGameEventResult>> EditAsync( int id, NegativeGameEventRequest request);
         Task<ServiceResult<NegativeGameEventResult>> CreateAsync(NegativeGameEventRequest request);
-        Task<ServiceResult<NegativeGameEventResult>> DeleteAsync(int eventId);
+        Task<ServiceResult<bool>> DeleteAsync(int eventId);
     } 
 }

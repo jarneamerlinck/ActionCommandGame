@@ -12,5 +12,6 @@ namespace ActionCommandGame.Services.Abstractions
         Task<ServiceResult<IList<NegativeGameEventResult>>> FindAsync(string authenticatedUserId);
         Task<ServiceResult<NegativeGameEventResult>> EditAsync(int id, NegativeGameEventRequest request, string authenticatedUserId);
         Task<ServiceResult<NegativeGameEventResult>> CreateAsync( NegativeGameEventRequest request, string authenticatedUserId);
+        Task<ServiceResult<bool>> DeleteAsync(int id, string authenticatedUserId);
     }
 }
