@@ -100,6 +100,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             }
 
             playerAction.GameResult = gameResult.Data;
+            
             playerAction.Messages = gameResult.Messages;
 
             return View("Index", playerAction);

@@ -10,15 +10,15 @@
 
 <partial name="PlayerHeaderPartial" model="@player"/>
 <div class="container-fluid row">
-    @if(gameResult is not null && @Model.Messages is null)
+    @if(gameResult is not null)
     {
         <partial name="GameResultPartial" model="@gameResult"/>
     }
     @if(@Model.Messages is not null)
     {   @foreach (var message in @Model.Messages)
-    {
-        <h6 class="redText">@message.Message</h6>
-    }
+        {
+            <h6 class="redText">@message.Message</h6>
+        }
         
     }
     <a type="button" class="btn Userbtn" asp-action="PerformAction">Go hunting</a>
