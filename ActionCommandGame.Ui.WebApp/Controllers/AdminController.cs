@@ -80,9 +80,44 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             }
             return View(negEvent);
         }
+        [HttpGet]
         public IActionResult NegativeEventCreate()
         {
-            return View();
+            var negEvent = new NegativeGameEventResult();
+            return View(negEvent);
+        }
+        [HttpPost]
+        public async Task<IActionResult> NegativeEventCreate([FromForm] NegativeGameEventRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(new NegativeGameEventResult
+                {
+                    
+                    DefenseLoss = request.DefenseLoss,
+                    DefenseWithGearDescription = request.DefenseWithGearDescription,
+                    Description = request.Description,
+                    Name = request.Name,
+                    DefenseWithoutGearDescription = request.DefenseWithoutGearDescription,
+                    Probability = request.Probability
+                });
+            }
+
+            var result = await _negativeEventApi.CreateAsync(request);
+            if (!result.IsSuccess)
+            {
+                return View(new NegativeGameEventResult
+                {
+                    
+                    DefenseLoss = request.DefenseLoss,
+                    DefenseWithGearDescription = request.DefenseWithGearDescription,
+                    Description = request.Description,
+                    Name = request.Name,
+                    DefenseWithoutGearDescription = request.DefenseWithoutGearDescription,
+                    Probability = request.Probability
+                });
+            }
+            return RedirectToAction("NegativeEvent");
         }
         [HttpGet]
         public IActionResult NegativeEventDelete(int eventId)

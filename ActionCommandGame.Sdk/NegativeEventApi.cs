@@ -64,6 +64,28 @@ namespace ActionCommandGame.Sdk
 
             return result;
         }
+        public async Task<ServiceResult<NegativeGameEventResult>> CreateAsync(NegativeGameEventRequest request)
+        {
+            var httpClient = _httpClientFactory.CreateClient("ActionCommandGame");
+            var token = await _tokenStore.GetTokenAsync();
+            httpClient.AddAuthorization(token);
+            var route = $"negative_events/";
+            var data = JsonConvert.SerializeObject(request);
+            var content = new StringContent(data, Encoding.UTF8, "application/json");
+
+            var httpResponse = await httpClient.PostAsync(route, content);
+
+            httpResponse.EnsureSuccessStatusCode();
+
+            var result = await httpResponse.Content.ReadFromJsonAsync<ServiceResult<NegativeGameEventResult>>();
+
+            if (result is null)
+            {
+                return new ServiceResult<NegativeGameEventResult>();
+            }
+
+            return result;
+        }
 
         public async Task<ServiceResult<NegativeGameEventResult>> DeleteAsync(int eventId)
         {

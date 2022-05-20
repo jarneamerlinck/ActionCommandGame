@@ -26,5 +26,11 @@ namespace ActionCommandGame.Api.Controllers
             var result = await _negativeGameEventService.EditAsync(request.Id, request, User.GetId());
             return Ok(result);
         }
+        [HttpPost("negative_events/")]
+        public async Task<IActionResult> Create([FromBody] NegativeGameEventRequest request)
+        {
+            var result = await _negativeGameEventService.CreateAsync(request, User.GetId());
+            return Ok(result);
+        }
     }
 }
