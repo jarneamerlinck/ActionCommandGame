@@ -5,10 +5,13 @@
 }
 
 
+<div class="container-fluid row">
+    <p class="yellowText">Are you sure you want to delete event: @Model.Id, @Model.Name with probability of @Model.Probability.</p>
 
-<p>Are you sure you want to delete @Model.Id @Model.Name with probability of  @Model.Probability.</p>
+    <form method="post", asp-action="ConfirmDelete", asp-route-id="@Model.Id">
+        <button class="btn btn-warning" type="submit">Yes</button>
+        <a class="btn btn-info" asp-action="Index">No</a>
 
-<form method="post">
-    <a class="btn btn-info" asp-action="Index">No</a> 
-    <button class="btn btn-warning" type="submit">Yes</button>
-</form>
+    </form>
+</div>
+

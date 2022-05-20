@@ -120,16 +120,27 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             return RedirectToAction("NegativeEvent");
         }
         [HttpGet]
-        public IActionResult NegativeEventDelete(int eventId)
+        public async Task<IActionResult> NegativeEventDelete(int id)
         {
-            return View();
+            var events = await _negativeEventApi.FindAsync();
+
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            var negEvent = events.Data.SingleOrDefault(e => e.Id == id);
+            if (negEvent is null)
+            {
+                return RedirectToAction("index");
+            }
+
+            return View(negEvent);
         }
-        [HttpPost("Admin/Delete/{id?}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost("Admin/Delete/{id}")]
+        public async Task<IActionResult> ConfirmDelete([FromRoute] int id)
         {
-            
-            return Ok();
+            var result = await _negativeEventApi.DeleteAsync(id);
+            return RedirectToAction("NegativeEvent");
         }
     }
 }
