@@ -8,7 +8,8 @@ namespace ActionCommandGame.Services.Extensions
     {
         public static IQueryable<PlayerResult> ProjectToResult(this IQueryable<Player> query)
         {
-            return query.Select(p => new PlayerResult
+            return
+             query.Select(p => new PlayerResult
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -32,6 +33,7 @@ namespace ActionCommandGame.Services.Extensions
                 TotalDefense = p.CurrentDefensePlayerItemId.HasValue ? p.CurrentDefensePlayerItem.Item.Defense : 0,
                 NumberOfInventoryItems = p.Inventory.Count
             });
+             
         }
 
         public static IQueryable<PositiveGameEventResult> ProjectToResult(this IQueryable<PositiveGameEvent> query)

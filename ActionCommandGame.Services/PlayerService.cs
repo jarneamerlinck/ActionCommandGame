@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ActionCommandGame.Model;
 using ActionCommandGame.Repository;
@@ -33,10 +34,13 @@ namespace ActionCommandGame.Services
 
         public async Task<ServiceResult<IList<PlayerResult>>> FindAsync(PlayerFilter filter, string authenticatedUserId)
         {
-            var players = await _database.Players
+            
+            var playersTemp = _database.Players
                 .ApplyFilter(filter, authenticatedUserId)
                 .ProjectToResult()
-                .ToListAsync();
+                ;
+
+            var players = await playersTemp.ToListAsync();
 
             return new ServiceResult<IList<PlayerResult>>(players);
         }

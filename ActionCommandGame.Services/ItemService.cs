@@ -115,6 +115,7 @@ namespace ActionCommandGame.Services
                 foreach (var toRemovePlayerItem in toRemovePlayerItems)
                 {
                     _database.PlayerItems.Remove(toRemovePlayerItem);
+                    await _database.SaveChangesAsync();
                 }
             }
             _database.Items.Remove(toRemoveObject);
