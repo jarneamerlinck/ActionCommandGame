@@ -15,12 +15,9 @@
     </td>
     <td>
         <div class="d-flex align-items-end">
-            <form method="post" asp-controller="Game" asp-action="PickPlayer">
-                <input asp-for="Id" type="hidden" value="@Model.Id">
-                
+            <form method="post" asp-controller="Game" asp-action="PickPlayer" asp-route-id="@Model.Id">
                 <input type="submit" placeholder="Select" value ="Select" class="btn Playerbtn">
             </form>
-            <a asp-action="CreatePlayer" class="btn btn-info">Make new Player</a>
         </div>
     </td>
 </tr>
