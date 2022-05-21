@@ -148,8 +148,6 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         }
 
-
-
         [HttpGet]
         public IActionResult CreatePlayer()
         {

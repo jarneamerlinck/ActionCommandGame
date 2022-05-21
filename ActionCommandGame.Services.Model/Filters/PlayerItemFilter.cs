@@ -3,5 +3,6 @@
     public class PlayerItemFilter
     {
         public int? PlayerId { get; set; }
+        public int? ItemId { get; set; }
     }
 }

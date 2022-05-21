@@ -18,6 +18,10 @@ namespace ActionCommandGame.Services.Extensions.Filters
             {
                 query = query.Where(pi => pi.PlayerId == filter.PlayerId.Value);
             }
+            if (filter.ItemId.HasValue)
+            {
+                query = query.Where(pi => pi.ItemId == filter.ItemId.Value);
+            }
 
             return query;
         }
