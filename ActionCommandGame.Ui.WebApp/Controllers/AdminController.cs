@@ -1,6 +1,7 @@
 ﻿using ActionCommandGame.Sdk.Abstractions;
 using ActionCommandGame.Services.Model.Requests;
 using ActionCommandGame.Services.Model.Results;
+using ActionCommandGame.Ui.WebApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,13 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var optionList = new List<AdminOption>
+            {
+                new() {Name = "Items", Description = "Create/Edit/delete items", asp_action = "Items"},
+                new() {Name = "Negative Events", Description = "Create/Edit/delete negative events", asp_action = "NegativeEvent"},
+                new() {Name = "Positive Events", Description = "Create/Edit/delete positive events", asp_action = "PositiveEvent"}
+            };
+            return View(optionList);
         }
         // Start negative
         public async Task<IActionResult> NegativeEvent()
@@ -147,6 +154,7 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             return RedirectToAction("NegativeEvent");
         }
         //End Negative
+
         // Start Positive
         public async Task<IActionResult> PositiveEvent()
         {

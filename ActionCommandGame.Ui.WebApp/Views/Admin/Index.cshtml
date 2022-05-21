@@ -1,6 +1,15 @@
-﻿
+﻿@using System.Collections
+@model IList<AdminOption>
+@{
+
+}
+
 <div class="container-fluid row">
     <h1 class="yellowText">Welcome Admin</h1>
-    <a asp-controller="Admin" asp-action="NegativeEvent"> edit negative events</a>
-    <a asp-controller="Admin" asp-action="PositiveEvent"> edit positive events</a>
+    <div class="card-group mb-3 text-center">
+    @foreach (var s in @Model)
+    {
+        <partial name="IndexPartial" model="s"/>
+    }
+    </div>
 </div>
