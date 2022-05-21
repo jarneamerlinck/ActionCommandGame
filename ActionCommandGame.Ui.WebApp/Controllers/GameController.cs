@@ -141,13 +141,14 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             return View(user);
         }
         [HttpPost]
-        public async Task<IActionResult> PickPlayer([FromForm] int id)
+        public async Task<IActionResult> PickPlayer([FromRoute] int id)
         {
             await _playerStore.SaveTokenAsync(id);
             return RedirectToAction("index");
 
         }
 
+  
         [HttpGet]
         public IActionResult CreatePlayer()
         {
