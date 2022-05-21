@@ -1,0 +1,30 @@
+﻿@model IList<ActionCommandGame.Services.Model.Results.ItemResult>
+
+@{
+    ViewData["Title"] = "Manage Items";
+}
+
+<div class="text-center">
+    <h1 class="display-4 yellowText">@ViewData["Title"]</h1>
+</div>
+
+<a asp-action="Index" class="btn btn-link">Return</a>
+<a asp-action="ItemCreate" class="btn btn-primary Playerbtn">New Items</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th class="yellowText">Name</th>
+        <th class="yellowText">Description</th>
+        <th class="yellowText">Price</th>
+        <th class="yellowText">ActionCooldownSeconds</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in @Model)
+    {
+        <partial name="ItemRowPartial" model="item"/>
+    }
+    </tbody>
+</table>

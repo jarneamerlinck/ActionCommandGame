@@ -12,11 +12,14 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
     {
         private readonly INegativeEventApi _negativeEventApi;
         private readonly IPositiveEventApi _positiveEventApi;
+        private readonly IItemApi _itemApi;
         public AdminController(INegativeEventApi negativeEventApi,
-            IPositiveEventApi positiveEventApi)
+                                IPositiveEventApi positiveEventApi,
+                                IItemApi itemApi)
         {
             _negativeEventApi = negativeEventApi;
             _positiveEventApi = positiveEventApi;
+            _itemApi = itemApi;
         }
 
         public IActionResult Index()
@@ -276,5 +279,137 @@ namespace ActionCommandGame.Ui.WebApp.Controllers
             return RedirectToAction("PositiveEvent");
         }
         //End Positive
+
+        // Start Items
+        public async Task<IActionResult> Items()
+        {
+            var events = await _itemApi.FindAsync();
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            return View(events.Data);
+
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> ItemEdit([FromRoute] int id, [FromForm] ItemRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(new ItemResult()
+                {
+                    Id = id,
+                    Price = request.Price,
+                    Description = request.Description,
+                    Name = request.Name,
+                    ActionCooldownSeconds = request.ActionCooldownSeconds,
+                    Defense = request.Defense,
+                    Fuel = request.Fuel,
+                    ImageLocation = request.ImageLocation,
+                    Attack = request.Attack
+                });
+            }
+
+            request.Id = id;
+            var result = await _itemApi.EditAsync(id, request);
+            if (!result.IsSuccess)
+            {
+                return View(new ItemResult()
+                {
+                    Id = id,
+                    Price = request.Price,
+                    Description = request.Description,
+                    Name = request.Name,
+                    ActionCooldownSeconds = request.ActionCooldownSeconds,
+                    Defense = request.Defense,
+                    Fuel = request.Fuel,
+                    ImageLocation = request.ImageLocation,
+                    Attack = request.Attack
+                });
+            }
+            return RedirectToAction("Items");
+        }
+        [HttpGet]
+        public async Task<IActionResult> ItemEdit(int id)
+        {
+            var events = await _itemApi.FindAsync();
+
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            var item = events.Data.SingleOrDefault(e => e.Id == id);
+            if (item is null)
+            {
+                return RedirectToAction("index");
+            }
+            return View(item);
+        }
+        [HttpGet]
+        public IActionResult ItemCreate()
+        {
+            var item = new ItemResult();
+            return View(item);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ItemCreate([FromForm] ItemRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(new ItemResult()
+                {
+                    Price = request.Price,
+                    Description = request.Description,
+                    Name = request.Name,
+                    ActionCooldownSeconds = request.ActionCooldownSeconds,
+                    Defense = request.Defense,
+                    Fuel = request.Fuel,
+                    ImageLocation = request.ImageLocation,
+                    Attack = request.Attack
+                });
+            }
+
+            var result = await _itemApi.CreateAsync(request);
+            if (!result.IsSuccess)
+            {
+                return View(new ItemResult()
+                {
+                    Price = request.Price,
+                    Description = request.Description,
+                    Name = request.Name,
+                    ActionCooldownSeconds = request.ActionCooldownSeconds,
+                    Defense = request.Defense,
+                    Fuel = request.Fuel,
+                    ImageLocation = request.ImageLocation,
+                    Attack = request.Attack
+                });
+            }
+            return RedirectToAction("Items");
+        }
+        [HttpGet]
+        public async Task<IActionResult> ItemDelete(int id)
+        {
+            var events = await _itemApi.FindAsync();
+
+            if (!events.IsSuccess && events.Data is null)
+            {
+                return RedirectToAction("index");
+            }
+            var item = events.Data.SingleOrDefault(e => e.Id == id);
+            if (item is null)
+            {
+                return RedirectToAction("index");
+            }
+
+            return View(item);
+        }
+        [HttpPost("Admin/DeleteItem/{id}")]
+        public async Task<IActionResult> ConfirmDeleteItem([FromRoute] int id)
+        {
+            var result = await _itemApi.DeleteAsync(id);
+            return RedirectToAction("Items");
+        }
+        //End Items
     }
 }

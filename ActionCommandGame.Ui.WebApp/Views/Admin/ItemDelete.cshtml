@@ -1,0 +1,17 @@
+﻿@model ActionCommandGame.Services.Model.Results.ItemResult
+
+@{
+    ViewData["Title"] = "Delete Items";
+}
+
+
+<div class="container-fluid row">
+    <p class="yellowText">Are you sure you want to delete event: @Model.Id, @Model.Name with a price of @Model.Price.</p>
+
+    <form method="post", asp-action="ConfirmDeleteItem", asp-route-id="@Model.Id">
+        <button class="btn btn-warning" type="submit">Yes</button>
+        <a class="btn btn-info" asp-action="Index">No</a>
+
+    </form>
+</div>
+

@@ -1,0 +1,13 @@
+﻿@model ActionCommandGame.Services.Model.Results.ItemResult
+
+<tr>
+    <td>@Model.Name</td>
+    <td>@Model.Description</td>
+    <td>@Model.Price</td>
+    <td>@Model.ActionCooldownSeconds</td>
+    <td>
+        <a asp-action="ItemEdit" asp-route-id="@Model.Id" class="btn btn-info">Edit</a>
+        <a asp-action="ItemDelete" asp-route-id="@Model.Id"  class="btn btn-warning">Delete</a>
+
+    </td>
+</tr>

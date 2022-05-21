@@ -1,0 +1,44 @@
+﻿@model ActionCommandGame.Services.Model.Results.ItemResult 
+
+<div asp-validation-summary="ModelOnly"></div>
+
+<div class="form-group">
+    <label asp-for="Name" class="yellowText"></label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Description" class="yellowText"></label>
+    <input asp-for="Description" class="form-control">
+    <span asp-validation-for="Description" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Price" class="yellowText"></label>
+    <input asp-for="Price" class="form-control">
+    <span asp-validation-for="Price" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for="ActionCooldownSeconds" class="yellowText"></label>
+    <input asp-for="ActionCooldownSeconds" class="form-control">
+    <span asp-validation-for="ActionCooldownSeconds" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Attack" class="yellowText"></label>
+    <input asp-for="Attack" class="form-control">
+    <span asp-validation-for="Attack" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Defense" class="yellowText"></label>
+    <input asp-for="Defense" class="form-control">
+    <span asp-validation-for="Defense" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Fuel" class="yellowText"></label>
+    <input asp-for="Fuel" class="form-control">
+    <span asp-validation-for="Fuel" class="redText"></span>
+</div>
+<div class="form-group">
+    <label asp-for=ImageLocation class="yellowText"></label>
+    <input asp-for="ImageLocation" class="form-control">
+    <span asp-validation-for="ImageLocation" class="redText"></span>
+</div>
